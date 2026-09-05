@@ -1,9 +1,19 @@
-# Arbitrage Ape — Due Diligence Report
+# Arbitrage Ape ($AA) — Due Diligence Report
 
-**Generated:** 2026-09-05 ~17:10 UTC  
-**Chain:** Robinhood Chain (`4663`)  
-**Scope:** Product mechanics, custody/permission map, risks, and onchain-verified payout rounds  
-**Format:** Single self-contained Markdown file (status + full payout history embedded)
+**Generated:** 2026-09-05 ~23:15 UTC (merged v3)  
+**Chain:** Robinhood Chain (`4663`) — RPC-verified  
+**Exact token:** `0xe2dae1c072b9f66bed999873b94798b2152af7e1`  
+**Scope:** Product mechanics, custody/permission map, risks, onchain-verified payouts, skill-grade surface scoring  
+**Format:** Single self-contained Markdown (status + full payout history + target pin embedded)  
+**Skill:** [evm-token-due-diligence](sand-workflow:evm-token-due-diligence)
+
+### State pin
+| Field | Value |
+|---|---|
+| Label | `state_head` |
+| Block | `55498712` |
+| Block hash | `0x905feebb6faf85315a8f2697e121f538dcc28d4e58fd8e102d59dc3c4df65823` |
+| UTC | `2026-09-05T23:03:40Z` |
 
 ---
 
@@ -16,9 +26,27 @@ It is also **maximally centralized**: the vault is **unverified**, the **owner c
 | Question | Answer |
 |---|---|
 | Real onchain capital + automated execution? | **Yes** |
-| Holder payments real USDG? | **Yes** (RPC-verified) |
+| Holder payments real USDG? | **Yes** (RPC-verified samples + live API) |
 | Empty “waiting for keeper” UI = inactive? | **No** — SSR placeholders; `/api/*` and chain are live |
-| Trustless / unrugable? | **No** |
+| Trustless / rug-resistant vault? | **NO-GO** — `withdraw` present; no timelock |
+
+### Surface scores (pinned state)
+
+| Surface | Rating |
+|---|---|
+| Token controls | Moderate concern (Pons v2 token verified; vault is control plane) |
+| Canonical LP-principal custody | High concern (vault/`exec` funded LP; owner can withdraw) |
+| Side-pool removal risk | Unknown / elevated |
+| Sellability and exit depth | Unknown (coverage — no holder-sized quotes this run) |
+| Current concentration | Elevated (vault ~10.7% `$AA`) |
+| Historical launch integrity | Partial (Pons v2 confirmed; SIZE-cohort not completed) |
+| Admin / treasury / reward custody | **Critical** |
+| Reward accounting and liveness | Strong (operational) |
+| Utility and redemption rights | Weak for holders |
+| External dependencies | High |
+| Development and disclosure | Mixed (APIs good; vault unverified) |
+
+**Do not average** the critical owner-withdraw finding with “payments are real.”
 
 ---
 
@@ -30,32 +58,29 @@ It is also **maximally centralized**: the vault is **unverified**, the **owner c
 | Method docs | https://www.arbitrageape.app/docs |
 | X | https://x.com/ArbitrageApe (created ~2026-09-04) |
 | Vault / fund | `0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98` |
-| `$AA` fee token | `0xe2dae1c072b9f66bed999873b94798b2152af7e1` — name **Arbitrage Ape**, symbol **AA**, 18 decimals, 1B supply |
+| `$AA` fee token | `0xe2dae1c072b9f66bed999873b94798b2152af7e1` — **Arbitrage Ape** / `AA`, 18 decimals, 1B supply; Blockscout name `PonsV2LauncherToken` (verified) |
 | USDG | `0x5fc5360d0400a0fd4f2af552add042d716f1d168` — **6 decimals** |
 | Keeper (EOA) | `0xdef933cfaeb2a2af516df1eaa2101b00b7f77af6` |
-| Owner | `0x12b46b7746af4a902fd55198f09ecfd8c4d42956` |
+| Owner | `0x12b46b7746af4a902fd55198f09ecfd8c4d42956` (`owner()` eth_call at pin) |
 | Explorers | [Blockscout](https://robinhoodchain.blockscout.com/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98) · [Robinscan](https://robinscan.io/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98) |
 | Live APIs | `/api/status`, `/api/distributions`, `/api/trades`, `/api/positions`, … |
 
-**Live snapshot (API + RPC, ~17:10 UTC):**
+**Live snapshot (API at report generation; pin `55498712`):**
 
 | Metric | Value |
 |---|---|
 | Mode | `live` |
-| Vault ETH | ~1.46 ETH |
-| Vault USDG | ~**$56,421** |
-| Vault `$AA` | ~**105.6M** (~10.6% of supply) |
-| Realized profit | ~$32,937 |
-| Distributed | ~$32,475–$32,650 |
-| Pending owed | ~$288 |
-| Fee flow claimed (lifetime) | ~$149,072 |
-| LP principal PnL (API) | **−~$20,478** |
+| Vault ETH | ~1.2677506289738811 ETH |
+| Vault USDG | ~**$18075.664799** |
+| Vault `$AA` (onchain) | ~**107.15M** (~10.7% supply) |
+| Realized profit | ~$49116.86 |
+| Distributed (API) | ~**$48808.79** |
+| Pending owed | ~$308.06 |
+| Fee flow claimed (lifetime) | ~**$159395.35** |
+| LP principal PnL (API) | **~$-36962.94** |
 | Instruments / eligible | ~194 / ~89 |
-| `$AA` mark (API) | ~$0.0024 · mcap ~$2.4M |
-| Keeper nonce | ~2820 |
-| Owner nonce | ~25 |
-
----
+| Pools tracked v3/v4 | 373 / 7652 |
+| `$AA` mark (API) | ~$0.0017902589788860127 · mcap ~$1790259 |
 
 ## 2. How it works
 
@@ -187,30 +212,30 @@ Related views/errors in bytecode: `windowStart(address)`, `CapExceeded`, `Insuff
 
 ---
 
-## 5. Payout rounds — desk-wide totals
+## 5. Payout rounds — desk-wide totals (refreshed)
 
 | Metric | Value |
 |---|---|
-| Distribution rounds | **141** |
-| Onchain payout transaction hashes | **431** unique |
-| Rounds using multiple txs | **92** |
-| Sum of API round totals | **$32,474.73** |
-| Desk `distributedUsd` | **$32,649.84** |
-| First round | 2026-09-04 13:19 UTC · $0.87 · 33 holders |
-| Latest (at generation) | 2026-09-05 16:50 UTC · $405.69 · 968 holders · 5 txs |
-| Largest round | 2026-09-05 14:06 UTC · **$1,514.41** · 1,283 holders · 7 txs |
+| Distribution rounds | **164** |
+| Onchain payout transaction hashes | **561** unique |
+| Rounds using multiple txs | **115** |
+| Sum of API round totals | **$48,633.68** |
+| Desk `distributedUsd` | **$48,808.79** |
+| First round | 2026-09-04 13:19 UTC · $0.8666 · 33 holders |
+| Latest round | 2026-09-05 23:02 UTC · $702.25851 · 1041 holders · 6 txs |
+| Largest round | 2026-09-05 20:39 UTC · **$2,779.56** · 1346 holders |
 | Cadence | ~15–18 minutes |
 
 ### Size distribution (by round `totalUsd`)
 
 | Band | Rounds | Sum USD |
 |---|---|---|
-| &lt; $1 | 11 | $8.22 |
+| < $1 | 11 | $8.22 |
 | $1–10 | 24 | $70.27 |
 | $10–100 | 39 | $2,106.71 |
-| $100–500 | 43 | $12,299.09 |
-| $500–1,000 | 19 | $11,688.68 |
-| ≥ $1,000 | 5 | $6,301.76 |
+| $100–500 | 55 | $16,760.78 |
+| $500–1,000 | 26 | $16,708.74 |
+| ≥ $1,000 | 9 | $12,978.97 |
 
 Full machine-readable feed (also embedded in Appendix D): https://www.arbitrageape.app/api/distributions
 
@@ -285,12 +310,78 @@ System-level recipient behavior from docs and observed `distribute` txs:
 
 ---
 
-## 8. Bottom line
+> **Note:** Samples A–C above were RPC-verified at the original ~17:10 UTC generation. They remain valid historical evidence. Desk totals above are **refreshed** to the pinned/live API state.
+
+## 7. Holder distribution mechanics
+
+System-level recipient behavior from docs and observed `distribute` txs:
+
+- Payouts are **pro-rata `$AA` balance** at snapshot (docs: local Transfer history, spot-checked vs chain).
+- Eligible supply excludes AMM reserves, protocol machinery, and desk addresses.
+- Sub-dust allocations stay in the pot.
+- Observed onchain: multi-recipient USDG fans from the vault in a single `distribute` call; larger rounds chunk addresses across txs.
+- Holder counts grew from **~33** (first round) to **~900–1,300** on recent large rounds.
+
+---
+
+## 8. Concentration (holders page, refreshed)
+
+Blockscout `holders_count` ≈ **1700** at fetch time. Top of first holders page:
+
+| Address | % supply | Note |
+|---|---|---|
+| `0x0feB08fcF34F5c0e270261bC79BaFC0F8eb87f98` | 10.7154% | vault |
+| `0x267444D099b10fB5Ed7c3Cc7B7c767AdcA574952` | 8.1633% |  |
+| `0x8366a39CC670B4001A1121B8F6A443A643e40951` | 4.3437% | Uniswap v4 PoolManager (LP inventory) |
+| `0x47bfaF27eD550FfaA24a593E772A5947AF9f6523` | 3.0013% |  |
+| `0x05607d87494C3f9D6e43Be2C2E5Ed23A95574548` | 2.636% |  |
+| `0xB3F4bE999FD39f4a56F5a9713DcAed3Edb310a14` | 2.632% |  |
+| `0xE46a27A4e371d10F5A8155f44da25eb5F91fA835` | 2.3488% |  |
+| `0xa5239426423e2600C1DC35A8fce400929C547e4d` | 1.4299% |  |
+| `0x2032f86ef7f40e91cA1B1AF304A17d9Ad3881a90` | 1.3048% |  |
+| `0x4d8eDF53399736052850646b43E3329c66BB49DC` | 1.2176% |  |
+| `0x77dc0CA15471d42Bd326279526e8d6D7EE10E74a` | 1.1999% |  |
+| `0x0990A6A05bFF0c441D99b7301bB2b07816Eab496` | 1.1065% |  |
+| `0x4a1281eb29Bc0061123dbbe9DA699e3F255EbEE7` | 1.0993% |  |
+| `0x696d1265C8Fc4F14797aBEBFAe3C43EBFA9D8e28` | 1.0016% |  |
+| `0x3d957C9Ea42C8743b462abD451E3c93F249D4ace` | 0.9965% |  |
+
+Vault alone ≈ **10.7%** of supply. Uniswap v4 PoolManager balance is **pool inventory**, not a retail holder.
+
+---
+
+## 9. Finding-to-evidence ledger (new)
+
+| ID | Proposition | Evidence | Confidence | Stale if |
+|---|---|---|---|---|
+| F1 | Chain is `4663` | `eth_chainId` in pin | High | other chain |
+| F2 | Exact `$AA` is `0xe2dae1c072b9f66bed999873b94798b2152af7e1` | token meta + holders | High | — |
+| F3 | Vault `owner()` is `0x12b46b7746af4a902fd55198f09ecfd8c4d42956` | eth_call `0x8da5cb5b` at pin | High | ownership transfer |
+| F4 | `withdraw(address,address,uint256)` in vault runtime | selector `0xd9caed12` in `vault.runtime.hex` | High | new deploy |
+| F5 | `exec` / `setKeeper` / `keeper` / `0x15270ace` present | runtime selector scan | High | new deploy |
+| F6 | Vault unverified | Blockscout `is_verified: false` | High | verification |
+| F7 | Live distributions accruing | `/api/status` + 164 rounds | High | API change |
+| F8 | Early distribute succeeded | tx `0x567e40ea…2f51` keeper→vault | High | — |
+| F9 | Vault ~10.7% `$AA` | holders page + balance call | High | transfers |
+| F10 | `$AA` is Pons v2 launcher token | Blockscout contract name/creator | High | — |
+| F11 | Holder-sized exit depth OK | **not obtained** | — | — |
+| F12 | Launch cohort clean (SIZE-pattern) | **not investigated** | — | — |
+| F13 | Owner never withdrew treasury | **not proven** | — | — |
+
+---
+
+## 10. Bottom line
 
 **Real desk. Real keeper. Real USDG payouts.**  
-**Not trustless. Soft-rug capable by design (owner withdraw).**
+**Not trustless. Soft-rug capable by design (owner withdraw).**  
+**NO-GO under a rug-resistance requirement**; acceptable only as **operator-dependent speculative yield** on `$AA`, with custody and LP/inventory risk the distribution feed alone will not show.
 
-Size exposure as **operator-dependent speculative yield** on `$AA`, with custody and LP/inventory risk that the distribution feed alone will not show.
+### Coverage limits (not passes)
+1. Pinned holder-sized `$AA` sell quotes  
+2. SIZE-pattern launch-cohort accounting  
+3. Receipt-level fee→inventory→distribute conservation + owner-withdraw history  
+4. Exhaustive side-pool LP inventory beyond API bands  
+5. `pendingOwner()` at pin (RPC 429 on one call)
 
 ---
 
@@ -303,65 +394,66 @@ Size exposure as **operator-dependent speculative yield** on `$AA`, with custody
 - Vault (Blockscout): https://robinhoodchain.blockscout.com/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98
 - Vault (Robinscan): https://robinscan.io/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98
 - `$AA`: https://robinhoodchain.blockscout.com/token/0xe2dae1c072b9f66bed999873b94798b2152af7e1
+- Public prior copy: https://github.com/adidogCEO/Robinhood-Research/blob/main/Arbitrage-Ape.md
 
 ## Appendix B — Live desk status (embedded)
 
-Snapshot of `GET https://www.arbitrageape.app/api/status` at report generation. Formerly a separate `status.json`.
+Snapshot of `GET https://www.arbitrageape.app/api/status` at this report generation (refreshed). Formerly a separate `status.json`.
 
 ```json
 {
   "mode": "live",
   "feeToken": "0xe2dae1c072b9f66bed999873b94798b2152af7e1",
   "fund": "0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98",
-  "ethBalance": "1.4617572095839835",
-  "ethUsd": 2471.6032,
+  "ethBalance": "1.2677506289738811",
+  "ethUsd": 2484.62495218,
   "ethFloatTargetUsd": 3000,
-  "usdgBalance": 56420.994304,
-  "realizedProfitUsd": 32937.35283333411,
+  "usdgBalance": 18075.664799,
+  "realizedProfitUsd": 49116.8582435298,
   "operatorPnlUsd": -53.58,
-  "lpPrincipalPnlUsd": -20478.228055228607,
-  "distributedUsd": 32649.83737200001,
+  "lpPrincipalPnlUsd": -36962.94028217039,
+  "distributedUsd": 48808.79344900001,
   "minDistributionUsd": 300,
-  "pendingProfitUsd": 287.5154613341001,
-  "lastDistributionAt": 1788627002193,
-  "nextDistributionAt": 1788628071848,
-  "lastScanAt": 1788628121173,
+  "pendingProfitUsd": 308.06479452978965,
+  "lastDistributionAt": 1788649332671,
+  "nextDistributionAt": 1788650232671,
+  "lastScanAt": 1788650141825,
   "lastSurveyAt": 1788574309360,
-  "referenceAt": 1788628116856,
+  "referenceAt": 1788650141170,
   "marketOpen": false,
   "thresholdBps": 3500,
   "pools": {
-    "v3": 370,
-    "v4": 7628
+    "v3": 373,
+    "v4": 7652
   },
   "instruments": 194,
   "eligible": 89,
   "feed": {
     "live": true,
-    "lastEventAt": 1788628120355,
-    "events": 213757,
-    "since": 1788624312908
+    "lastEventAt": 1788650141726,
+    "events": 45279,
+    "since": 1788648072668
   },
   "backfill": {
-    "head": "55287316",
-    "v3": "55287317",
-    "v4": "55287317",
+    "head": "55505623",
+    "v3": "55505624",
+    "v4": "55505624",
     "caughtUp": true,
-    "at": 1788628081664
+    "at": 1788650117062
   },
   "feeFlow": {
     "escrowUsd": 0,
-    "claimedUsd": 149071.9145070001,
-    "lastClaimAt": 1788627850575,
+    "claimedUsd": 159395.3490740001,
+    "lastClaimAt": 1788648609645,
     "phase": 2,
     "recipientIsVault": true,
-    "at": 1788627850667
+    "at": 1788650106324
   },
   "token": {
-    "priceUsd": 0.002629647627707595,
-    "mcapUsd": 2629647.627707595,
+    "priceUsd": 0.0017902589788860127,
+    "mcapUsd": 1790258.9788860127,
     "supply": 1000000000,
-    "at": 1788628121559
+    "at": 1788650143393
   },
   "lp": {
     "enabled": true,
@@ -387,28 +479,28 @@ Snapshot of `GET https://www.arbitrageape.app/api/status` at report generation. 
           "depositQty": 2872.0961202523567,
           "depositStockCostUsd": 912.2449209537732,
           "depositQuoteQty": 0,
-          "stockQty": 3447.4577538543526,
-          "cashUsd": 704.1210432945956,
-          "quoteQty": 704.1210432945956,
-          "valueUsd": 1747.4250853196136,
-          "feesUnclaimedUsd": 0.807313560086722,
-          "feesCollectedUsd": 33.92889944713835,
+          "stockQty": 5232.044397843999,
+          "cashUsd": 194.84987259319865,
+          "quoteQty": 194.84987259319865,
+          "valueUsd": 1596.096097734623,
+          "feesUnclaimedUsd": 0.8547193526085889,
+          "feesCollectedUsd": 63.735693612517544,
           "inRange": true,
           "openedAt": 1788622632173,
           "txHash": "0x785340acf6f604fd5472bb0c0de5682c70cc97df959199e0cecbaf2ecb100e84"
         },
-        "spotUsd": 0.3040744095646999,
-        "refUsd": 0.3026299715663159,
-        "feesCollectedUsd": 159.1134644681933,
+        "spotUsd": 0.2678200180638461,
+        "refUsd": 0.2678200180638461,
+        "feesCollectedUsd": 188.9202586335725,
         "lastAction": null,
-        "at": 1788628122398
+        "at": 1788650145449
       },
       {
         "symbol": "AA",
         "band": "AA",
         "pool": "0xe2156fc6454acef70a7763cf0f90e207c182880388ab3d381b84dc5d2e91b1bf",
         "protocol": "v4",
-        "capitalUsd": 20000,
+        "capitalUsd": 30000,
         "mode": "two-sided",
         "fee": 50000,
         "stockIs0": false,
@@ -417,28 +509,28 @@ Snapshot of `GET https://www.arbitrageape.app/api/status` at report generation. 
         "maxLossBps": 6000,
         "hooked": false,
         "position": {
-          "tokenId": "1911660",
-          "lowerUsd": 0.001337080867730584,
-          "upperUsd": 0.003128164102019385,
-          "depositUsd": 8277.74359,
-          "depositQty": 4437635.434656301,
+          "tokenId": "1959518",
+          "lowerUsd": 0.0010413326425273775,
+          "upperUsd": 0.0024362471030970516,
+          "depositUsd": 13043.90594,
+          "depositQty": 8402565.8619081,
           "depositStockCostUsd": 0,
           "depositQuoteQty": 0,
-          "stockQty": 1978477.2527736677,
-          "cashUsd": 13830.12034498256,
-          "quoteQty": 13830.12034498256,
-          "valueUsd": 8277.74359,
-          "feesUnclaimedUsd": 71.12681,
-          "feesCollectedUsd": 2358.2931718007376,
+          "stockQty": 5841316.2373495735,
+          "cashUsd": 17357.721915912505,
+          "quoteQty": 17357.721915912505,
+          "valueUsd": 13043.90594,
+          "feesUnclaimedUsd": 0,
+          "feesCollectedUsd": 792.7190459130621,
           "inRange": true,
-          "openedAt": 1788620729703,
-          "txHash": "0xb925834db5feb9c7e08e9a9149b437ea6e6cf1e2b8e9a750c11e4cebc15585cf"
+          "openedAt": 1788648388358,
+          "txHash": "0xac1ded7e070e784764cf3c74d79083afcfdc6b122199f804e5da063904acd6d1"
         },
-        "spotUsd": 0.0025369247633500397,
-        "refUsd": 0.0025812128130685915,
-        "feesCollectedUsd": 20207.709035432,
+        "spotUsd": 0.0017897823772803907,
+        "refUsd": 0.0017900206780832018,
+        "feesCollectedUsd": 26838.855143109387,
         "lastAction": null,
-        "at": 1788628125001
+        "at": 1788650146317
       },
       {
         "symbol": "PONS",
@@ -461,21 +553,21 @@ Snapshot of `GET https://www.arbitrageape.app/api/status` at report generation. 
           "depositQty": 5680.9038869999995,
           "depositStockCostUsd": 4475.322743821929,
           "depositQuoteQty": 0,
-          "stockQty": 3082.58881768789,
-          "cashUsd": 6723.623144548066,
-          "quoteQty": 6723.623144548066,
-          "valueUsd": 9650.564037778697,
-          "feesUnclaimedUsd": 0.574985,
-          "feesCollectedUsd": 66.48088896291551,
+          "stockQty": 3585.1734212662523,
+          "cashUsd": 6254.872126948857,
+          "quoteQty": 6254.872126948857,
+          "valueUsd": 9554.640282183835,
+          "feesUnclaimedUsd": 0,
+          "feesCollectedUsd": 107.10558963084192,
           "inRange": true,
           "openedAt": 1788596219535,
           "txHash": "0x99d4e6e99f2ecf46237264f96b6bfd611928aaafa870afd3b05b2d6e185510d8"
         },
-        "spotUsd": 0.9494863378360411,
-        "refUsd": 0.9495073998957787,
-        "feesCollectedUsd": 66.48088896291551,
+        "spotUsd": 0.9161727428135038,
+        "refUsd": 0.9203928980566656,
+        "feesCollectedUsd": 107.10558963084192,
         "lastAction": null,
-        "at": 1788628125608
+        "at": 1788650146966
       },
       {
         "symbol": "GRASS",
@@ -498,21 +590,95 @@ Snapshot of `GET https://www.arbitrageape.app/api/status` at report generation. 
           "depositQty": 317313.8830412519,
           "depositStockCostUsd": 2953.851985237358,
           "depositQuoteQty": 0,
-          "stockQty": 132455.13607798732,
-          "cashUsd": 4436.78592281587,
-          "quoteQty": 4436.78592281587,
-          "valueUsd": 5830.331028962903,
-          "feesUnclaimedUsd": 38.333396306837216,
-          "feesCollectedUsd": 2249.997773311579,
+          "stockQty": 58156.4215376573,
+          "cashUsd": 5261.3145270533205,
+          "quoteQty": 5261.3145270533205,
+          "valueUsd": 5936.222432659597,
+          "feesUnclaimedUsd": 6.462053746452456,
+          "feesCollectedUsd": 2993.6100377610114,
           "inRange": true,
           "openedAt": 1788596195489,
           "txHash": "0xa9fa472ce3f87b4a1f53d7de8b3b62787cd1a4d9867410df310fced04270cb45"
         },
-        "spotUsd": 0.010549491260367312,
-        "refUsd": 0.010520883881214966,
-        "feesCollectedUsd": 2249.997773311579,
+        "spotUsd": 0.011673936766853223,
+        "refUsd": 0.011605045285829044,
+        "feesCollectedUsd": 2993.6100377610114,
         "lastAction": null,
-        "at": 1788628126176
+        "at": 1788650147637
+      },
+      {
+        "symbol": "DUST",
+        "band": "DUST",
+        "pool": "0xe4a994f090844198d1fe5da6386195231a62514e430f129d1a439b49403aea2e",
+        "protocol": "v4",
+        "capitalUsd": 10000,
+        "mode": "two-sided",
+        "fee": 50000,
+        "stockIs0": false,
+        "quoteSymbol": "USDG",
+        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "maxLossBps": 6000,
+        "hooked": false,
+        "position": {
+          "tokenId": "1949642",
+          "lowerUsd": 0.0005715126152419777,
+          "upperUsd": 0.0014056309559150014,
+          "depositUsd": 4498.147507,
+          "depositQty": 4983147.7809687,
+          "depositStockCostUsd": 5224.234850714932,
+          "depositQuoteQty": 0,
+          "stockQty": 9018831.943046203,
+          "cashUsd": 1382.7253614297433,
+          "quoteQty": 1382.7253614297433,
+          "valueUsd": 7344.556549023837,
+          "feesUnclaimedUsd": 36.452428602115546,
+          "feesCollectedUsd": 1116.3143342287615,
+          "inRange": true,
+          "openedAt": 1788641157777,
+          "txHash": "0x9c83ab3803ee4c1aa8cdcd8aefbc87d982435971eb09f06af8b48f25357a0bae"
+        },
+        "spotUsd": 0.0006639419093029526,
+        "refUsd": 0.0006610424969932885,
+        "feesCollectedUsd": 6140.130548411153,
+        "lastAction": null,
+        "at": 1788650148500
+      },
+      {
+        "symbol": "LDX",
+        "band": "LDX",
+        "pool": "0x2ac316cc5ae07e6d0debc06c8ea59c44cc4e01191ecd392f4e47e6a9135a5c12",
+        "protocol": "v4",
+        "capitalUsd": 10000,
+        "mode": "two-sided",
+        "fee": 50000,
+        "stockIs0": false,
+        "quoteSymbol": "USDG",
+        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "maxLossBps": 6000,
+        "hooked": false,
+        "position": {
+          "tokenId": "1953933",
+          "lowerUsd": 0.0012404727171854628,
+          "upperUsd": 0.0028304940807556277,
+          "depositUsd": 4313.193108,
+          "depositQty": 2327208.6817683,
+          "depositStockCostUsd": 4509.143867788259,
+          "depositQuoteQty": 0,
+          "stockQty": 4645412.822159398,
+          "cashUsd": 659.4926419180676,
+          "quoteQty": 659.4926419180676,
+          "valueUsd": 6753.807167446863,
+          "feesUnclaimedUsd": 30.680229718896385,
+          "feesCollectedUsd": 723.079400417152,
+          "inRange": true,
+          "openedAt": 1788644917927,
+          "txHash": "0xc8a3c5b4d836ed1e40c1d119780697614861d73cc14e269bdacd72cdde863387"
+        },
+        "spotUsd": 0.0013283884329809957,
+        "refUsd": 0.001311899449809475,
+        "feesCollectedUsd": 766.3718104171519,
+        "lastAction": null,
+        "at": 1788650149556
       },
       {
         "symbol": "CATSTRO",
@@ -529,10 +695,10 @@ Snapshot of `GET https://www.arbitrageape.app/api/status` at report generation. 
         "hooked": false,
         "position": null,
         "spotUsd": 0.000491934848082592,
-        "refUsd": 0.0003370722120790303,
+        "refUsd": 0.00044218110309972465,
         "feesCollectedUsd": 355.6872865478012,
         "lastAction": "paused after a max-loss close until 2026-09-06T06:16Z",
-        "at": 1788628127450
+        "at": 1788650150483
       },
       {
         "symbol": "NEST",
@@ -548,77 +714,103 @@ Snapshot of `GET https://www.arbitrageape.app/api/status` at report generation. 
         "maxLossBps": 6000,
         "hooked": false,
         "position": {
-          "tokenId": "1920818",
-          "lowerUsd": 0.0005068892594234797,
-          "upperUsd": 0.0011740922317915144,
-          "depositUsd": 5400,
-          "depositQty": 6591154.547432701,
-          "depositStockCostUsd": 9666.41042680235,
+          "tokenId": "1951186",
+          "lowerUsd": 0.0008698019641339316,
+          "upperUsd": 0.0020146959326937867,
+          "depositUsd": 5097.913021,
+          "depositQty": 4116545.8003404,
+          "depositStockCostUsd": 6279.639566062678,
           "depositQuoteQty": 0,
-          "stockQty": 3124514.810578411,
-          "cashUsd": 8396.155330748628,
-          "quoteQty": 8396.155330748628,
-          "valueUsd": 11396.246646780091,
-          "feesUnclaimedUsd": 82.14757666410736,
-          "feesCollectedUsd": 834.5266328048361,
+          "stockQty": 5629511.443543357,
+          "cashUsd": 3252.159107890577,
+          "quoteQty": 3252.159107890577,
+          "valueUsd": 9594.495128760338,
+          "feesUnclaimedUsd": 28.39970957493673,
+          "feesCollectedUsd": 689.092957042795,
           "inRange": true,
-          "openedAt": 1788624065383,
-          "txHash": "0x3aaa70883ac76a8c1784a33946f2b4a3725baeac3ffa8abd320137ba9a468266"
+          "openedAt": 1788642433198,
+          "txHash": "0x6c19add3b3eda7c77bd757c296c90dc959d08813ab498d72679aa21bf6dc0835"
         },
-        "spotUsd": 0.0009573185624858556,
-        "refUsd": 0.0009601782990031934,
-        "feesCollectedUsd": 9801.013139481132,
+        "spotUsd": 0.001138563882734398,
+        "refUsd": 0.0011266228134492848,
+        "feesCollectedUsd": 12574.155634125962,
         "lastAction": null,
-        "at": 1788628114752
+        "at": 1788650151218
+      },
+      {
+        "symbol": "UNIPCS",
+        "band": "UNIPCS",
+        "pool": "0x7b261f6244bb469568783f6ba4b6042b9d62901490d5b8501aee0c7f4e7af052",
+        "protocol": "v4",
+        "capitalUsd": 2000,
+        "mode": "two-sided",
+        "fee": 50000,
+        "stockIs0": false,
+        "quoteSymbol": "USDG",
+        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "maxLossBps": 6000,
+        "hooked": false,
+        "position": null,
+        "spotUsd": 2.9389568075855845e-27,
+        "refUsd": 0.001968487147011522,
+        "feesCollectedUsd": 162.68922509206075,
+        "lastAction": "waiting: pool price 0.0000 is 100% off the real price 0.0020; not placing until the pool is re-aligned",
+        "at": 1788650151571
       }
     ],
-    "feesCollectedUsd": 43664.9988456462,
-    "at": 1788628127451
+    "feesCollectedUsd": 63418.749738553415,
+    "at": 1788650151572
   }
 }
 ```
 
 ## Appendix C — Compact summary (embedded)
 
-Formerly `meta.json`.
-
 ```json
 {
-  "generatedAt": "2026-09-05T17:09:34.493821+00:00",
-  "rounds": 141,
-  "onchainTxs": 431,
-  "sumListUsd": 32474.726581,
+  "generatedAt": "2026-09-05T23:15:53.723247+00:00",
+  "reportVersion": "v3-merged",
+  "pin": {
+    "block_number": 55498712,
+    "block_hash": "0x905feebb6faf85315a8f2697e121f538dcc28d4e58fd8e102d59dc3c4df65823",
+    "utc": "2026-09-05T23:03:40Z",
+    "chain_id": 4663
+  },
+  "rounds": 164,
+  "onchainTxs": 561,
+  "multiTxRounds": 115,
+  "sumListUsd": 48633.682658,
   "status": {
     "mode": "live",
     "fund": "0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98",
     "feeToken": "0xe2dae1c072b9f66bed999873b94798b2152af7e1",
-    "distributedUsd": 32649.83737200001,
-    "realizedProfitUsd": 32937.35283333411,
-    "pendingProfitUsd": 287.5154613341001,
-    "usdgBalance": 56420.994304,
-    "ethBalance": "1.4617572095839835",
-    "lpPrincipalPnlUsd": -20478.228055228607
+    "distributedUsd": 48808.79344900001,
+    "realizedProfitUsd": 49116.8582435298,
+    "pendingProfitUsd": 308.06479452978965,
+    "usdgBalance": 18075.664799,
+    "ethBalance": "1.2677506289738811",
+    "lpPrincipalPnlUsd": -36962.94028217039
   },
   "feeFlow": {
     "escrowUsd": 0,
-    "claimedUsd": 149071.9145070001,
-    "lastClaimAt": 1788627850575,
+    "claimedUsd": 159395.3490740001,
+    "lastClaimAt": 1788648609645,
     "phase": 2,
     "recipientIsVault": true,
-    "at": 1788627850667
+    "at": 1788650106324
   },
   "token": {
-    "priceUsd": 0.002629647627707595,
-    "mcapUsd": 2629647.627707595,
+    "priceUsd": 0.0017902589788860127,
+    "mcapUsd": 1790258.9788860127,
     "supply": 1000000000,
-    "at": 1788628121559
+    "at": 1788650143393
   }
 }
 ```
 
 ## Appendix D — Full distribution history (embedded)
 
-All 141 payout rounds from `GET https://www.arbitrageape.app/api/distributions`. Formerly a separate `distributions.json`. Each entry includes timestamp (`at`, ms), `totalUsd`, `holders`, cumulative realized, and `txHash` (comma-separated when a round spans multiple txs).
+All **164** payout rounds from `GET https://www.arbitrageape.app/api/distributions` at this report generation. Formerly a separate `distributions.json`. Each entry includes timestamp (`at`, ms), `totalUsd`, `holders`, cumulative realized, and `txHash` (comma-separated when a round spans multiple txs).
 
 ```json
 [
@@ -1608,6 +1800,167 @@ All 141 payout rounds from `GET https://www.arbitrageape.app/api/distributions`.
     "holders": 968,
     "realizedCumUsd": 32651.956916091047,
     "txHash": "0x6ddbe65a384f0bbca8b8fd65a71b0011129839de5c2b306f8e4dace8be88924c,0xbee3b560409a0a71af6e7d4304ea0af50bdab068a5b3d3bfa82f88d5c91cd85a,0x80f527a5512235fb3356c4feba3ba31295349ea69699306a1e488e03dfbd83b1,0xe45ccfe3280c9a0708dac6e05da870103939457178dabd0398020edf745b325d,0x8a138e36a82f3d1fd96843db1bc59465fa90175afa957221b14431a59b52e8b0"
+  },
+  {
+    "at": 1788628201976,
+    "totalUsd": 407.606641,
+    "holders": 965,
+    "realizedCumUsd": 33059.58175133411,
+    "txHash": "0x2c0284c10279576ce9dbe5f929945d6faa7f6c4b6f6551634969685a92c0ae0a,0x7d785e8039e2bde36939dfec7e2b7a642f132d2f09952bf170efdc7cfd5bbcd6,0x3a794dabc742fef9254d46ef2b367cbc51b30502429950075d8f5debf519c45e,0x53a685f2cf0db342b27b0b2bd6f67b32259817e375bdf91276850d4530997042,0x84e7554eea7b12e3378f7862c66a0bf249e97291b2be006b7f708f3570be970c"
+  },
+  {
+    "at": 1788629160839,
+    "totalUsd": 407.680932,
+    "holders": 978,
+    "realizedCumUsd": 33467.273549806865,
+    "txHash": "0xf20b1e55ffc154c3d33406d1f33749bed698644f2851be909b9a831176769197,0x6f2dd494fea0cab7d8bb972315091245199903038f5c2950e70d81485cab30f4,0x8370b3ff2b3c6c431b03d6c0cb9530f4ad71f37a14f57804cbeeadf8485907e2,0xc34bc76fe8bfbdd75cb6a7930ef70a4190a9c40feebb0a163153963a054e26fa,0x004d6a192012f38bde2034313a27387819abe31fb8e64812f9839bc0916545e4"
+  },
+  {
+    "at": 1788630121223,
+    "totalUsd": 303.005625,
+    "holders": 905,
+    "realizedCumUsd": 33770.36892780686,
+    "txHash": "0xa4160e71547383a38fb9c9d063b5dec74db38138ec0300ce64a80ba1e3714b52,0x29a00b82cc169a5d38d5d122475511fac52a22f65d4102817061113b3092e829,0xf171e96386750dbca9dcd815a12f903899359b34d2342402e49a119a9b25481e,0xedc2f1c23abafff9bfd96dd276071b683afcbb8312f2f044b769ba1150ee315b,0xb30b1860cb44b5a7cf24593b0eff3b163920778dfcc571be69212bbec7bf3582"
+  },
+  {
+    "at": 1788631087147,
+    "totalUsd": 413.456449,
+    "holders": 973,
+    "realizedCumUsd": 34183.730603149335,
+    "txHash": "0xd539b32a6be237363bfad3d2c32f0b8712b067ce5156a78fbb12cce57e039aba,0xfd7e4309894cd28213303e7d77ffe0f3d6b4d65e312f2414bf86255f680ff1d2,0xa56eda5841e0c4980f6ef98206d844c1da2433b0b38b170db600a84cfb1ff419,0x92daf612328363aede156b2a5fa1001b35d95660e806a665d6eab892b5a8a16f,0x747200344f3dbaeb0e3a0908f8caa1f7cc0a42c39f7386905b011aa8fc1026ac"
+  },
+  {
+    "at": 1788632103282,
+    "totalUsd": 395.199973,
+    "holders": 960,
+    "realizedCumUsd": 34578.90085814933,
+    "txHash": "0x7707cdc1dabffe264c3d587c9e3a180ab14114ae58172e20c951b6d66a178a31,0xeb2328c3ab6286af96e3cb8998697017a42ba2852a311a6778fe8d084eab7e70,0x05cc0685244c0e676f8eee8a60d8a022a10c6b6c50b09180cd31ce8dbd5f2be9,0xec8f25572d63cb2143f12e4b0d91e589e8906b74bc0b150deafa340e042657fb,0xdb08df1032b125074232e68b2b6eeed9fc6941275d6c344639ca4eaff37e1161"
+  },
+  {
+    "at": 1788633060515,
+    "totalUsd": 409.452175,
+    "holders": 972,
+    "realizedCumUsd": 34988.36177013592,
+    "txHash": "0x15f5d3c12a4de40454a82ef34a1a9ca735a5d5836dd8e730483691ed190880e3,0xa55b7d89070feb722468d0af489e6673dc367519f9e24c57b660d62315fad0bb,0x7bb98bfb423acf30c32edfdb51b99043c9632b31d583ab9f6f871b3500df3eb0,0xf71fa42641931bdc991de41a68b30294900a042eaae1736b295b6dc4f967d8f3,0xa3cf879a8e48bfeb014254b053694c29286f1eb62c87e78e36d81f9bc92324a9"
+  },
+  {
+    "at": 1788634056083,
+    "totalUsd": 323.638323,
+    "holders": 918,
+    "realizedCumUsd": 35311.99374185648,
+    "txHash": "0xef6097e4d468e712b09b6a58e047f5542c37348ee72802622d7a99256fc55735,0xc29d84fdd798a0c7ec2d55735856ebf1a3fdf2ee03d6f2aea30442fd6c331b96,0xad2e397d0ac65c50697af3c49e689de8bfdd1569d60a4008faa47334d40eca1b,0x7ed0e9c829e468551f3c61b50d6840d7613ee09d0e82f40d6365b2b1e2700c26,0x7ed99fa4093da380afe6b9178cd20703688b10863880ec43ae7a03e1f1886faf"
+  },
+  {
+    "at": 1788634979934,
+    "totalUsd": 1223.165603,
+    "holders": 1221,
+    "realizedCumUsd": 36534.53455104378,
+    "txHash": "0xdb216a5a4fa1e515e6c5db22dc8fdf125fe3d164b34c061b6cf280bebbceaadb,0x53782bb1d0a88c6b25ac41b04ac2e53119ff49865f3fd2c1677c30a6808861b9,0x2b3ad9c881780da05efd86c6c204aa9bb3b488d8637cf5f8497101de7ca8033f,0x14ee76add09319574cebd439a90e1a9b5af0b162dfbddfd52b27194c34ea8416,0x813f948eccf6df555aa79e2319e0b45ff15787f027a84c049f57b7ad7a61931a,0x4ba98718acb2f575d8dbdb020e43859e1e3774f4b274d422235e48687d10ba45,0x2b6447b2c7b8214c51c854c9844138c48522bbc9857884c4c0d772ebb25760d4"
+  },
+  {
+    "at": 1788635937855,
+    "totalUsd": 545.35497,
+    "holders": 1033,
+    "realizedCumUsd": 37080.31892800102,
+    "txHash": "0x383ee96124505c3d3b58f38cf6a8ad929996af5daa54381e3689b54fb505d584,0x10c7b140e8bd2dc782640a04585265601bbc85029c596d5a99339c8995289416,0x2299bb714f2e088297e0dbc55e608cdf7370e2093763a914da4373c1fa47b4b6,0xfcb5a6cd98b3fff1f3669a059449f2ec7c722ebe41abbacc0fcc7bb5127a262e,0xfde5d4fae2178dc3dd723f480c0963cd554ab68900b03a7d27eb7e7558da14b3,0x95bc5779bb6d53dc55d741f8c0b0b1c062af20d16a57ced4b57551608af27eda"
+  },
+  {
+    "at": 1788636897167,
+    "totalUsd": 1330.604328,
+    "holders": 1228,
+    "realizedCumUsd": 38410.41017526764,
+    "txHash": "0x8def3665d1f691adb7e83b7c40ba8128f841f1a3ce08fa6441a425c2293147cb,0x69a3bec10c81dc924913102084d6e0dc902fbd91d67fb92ee8f3c726ac85d0e8,0x8b585d4c6a53e4a01cd5aa8bdbfe2276c406a506bace2300dc4681a84ed4b851,0x86d4353c87c5e6e5eaed8e49d8b7a887873e7851e5930fe88e7fc0761da763ff,0x72811353deed6d135cad1362828901533972cb28e5cfb5a5b5524b9ee1c908e1,0x6da08ccc62971e2d6564c6181b7510450fd84154729f6cb69ea735a003fe65c2,0x14672250eb0473bf17751b0e075a5944d136484dceaef8134b1bf9461bb0c9e2"
+  },
+  {
+    "at": 1788637858984,
+    "totalUsd": 653.385513,
+    "holders": 1073,
+    "realizedCumUsd": 39064.197174562534,
+    "txHash": "0xdea22e51ded531339a15120f8db51aae2f4cbf867637ad6566dbd9786bd6d5bb,0xb3fd94cbcfc4f05fe3190f4a5c544ca5913c015f777341909be661e3568b7203,0xa18bbe41403a1ba78d9877670f1119d6c3fcb62506a5572887c4cacd96951814,0x7e3fe57f6c449f91568166e4c091c3b6a543f6c52cac012aeeb032b5d18979a6,0x08bd7a6838ea4aa2d6b0eb1344e0f552c1fbca87d07eb48382684188a1f54549,0x9d7cf5123cf90a2f04ca9ad8afe5ba467d23baddfc3ebaa06baf98b5104f2bb5"
+  },
+  {
+    "at": 1788638833057,
+    "totalUsd": 917.326736,
+    "holders": 1145,
+    "realizedCumUsd": 40044.321761767664,
+    "txHash": "0xbad76ce7fbeb7ab75d7cd840a2e82e082c8f46e60b0136bf72ecc852340c8bc4,0x0e77afcd992122156f2d23a9ee3a1640f3b69f3ac963c2092c67dd12631e0e25,0xc3faf3eb0c56d080b678252268fe5b192a3ecf044f10d1a6336a49d9451c37b5,0x1ec4f1ac15c3e5b5a5a6ef6654d04749f2e6d46c3169fc092077ee064f2b2752,0x5d02acf968d04b01d1bb2d42ebc68b6776e5c6fdc31d716c9c1654a69e7a76d4,0x5d12e39c05ca2cbf370988d6183743fd60868b287cf0086bb70d4ae5aa8023e4"
+  },
+  {
+    "at": 1788639808190,
+    "totalUsd": 948.563029,
+    "holders": 1146,
+    "realizedCumUsd": 40929.95878261052,
+    "txHash": "0x5b5a59eddf081ae865194f60609451e81d754791fc1c9c3cb70c8eaf767b9900,0x1bbbfb20fe1aa01b2e90674236a94a51158c9b61debb858475f0d52b2d92e213,0xf41b4730e47cca12a4addc9566107965d591127650b391aa6dd8e435991eb711,0x4db9925dc2ecd8d93633dfb47b2bc53d8d774c2d0541d959be07ad8bbfff8534,0xba5926f1939f5dd64fbc7ff2afe16222e0caa7493cd997aa43bbe80fbe326474,0xf69745ccc88c56f0634b7edda5a41041be5674f46a2e738f7b495bc85c898968"
+  },
+  {
+    "at": 1788640745728,
+    "totalUsd": 2779.558601,
+    "holders": 1346,
+    "realizedCumUsd": 43709.00954573475,
+    "txHash": "0xcf0fae3a7d9ede1f56c4e249652504692f88481bab90ff76d92a3b871f1d18b9,0x9df07f37736201e4b9279781eb45b0e6c05f9770adb5b1039d8ed549cf95ad47,0x7d839fdb6e2c5c1dbafaad7437bb4521d5b97f49f98f98d1b9f47c008e89bbd3,0x671cf18d50b8850857cd2c99f226841cf23fb60eac0dd96196ee666468c64ec4,0xf576ce66d003711287381601f62aeec649a6555fe7d628290e5e498193c2117a,0xab79efa579b4319f953304e696d3e27b1febfad5300904ad358182f6a754910e,0xf954c0cb389692b3cfef66ecea222bb1d60127a8c26062a9f76eeb70bf3af894"
+  },
+  {
+    "at": 1788641680695,
+    "totalUsd": 1343.880964,
+    "holders": 1232,
+    "realizedCumUsd": 45053.12500818151,
+    "txHash": "0xec2d8d44bb2a0ddbec9fe76c538728b020134772bde1c833e0f92460627e7316,0x3c55ef3bfb8681ab58a68c524a655144467656dcc6c63afeebe1e07235b94ff7,0x672ab7949b4c871497e3165dee6590505f466c9a43aded1e9536a84ee9fe5b5c,0xc9b191ca6028c002decc7072fff93f28013315cb8c1614b091f9ab9bc7387ddc,0xa7d0151dd88e77570ed59eb5c6ed823d88ac5330ae7674e4a3fd080c51c468ad,0x830531a6da155e1ccc9811b47d77fd0db80a8863c4b02335dbae6684363c26b4,0xcdd34223d0138509e38561196d2d6bed5119029049aa0b8584ef8bb159d9fc73"
+  },
+  {
+    "at": 1788642633379,
+    "totalUsd": 366.695739,
+    "holders": 921,
+    "realizedCumUsd": 45420.47606310485,
+    "txHash": "0x5bfec9578d045e7b826c97a689eb2515e098df0847c186189a9c677a0b6c3a46,0x17bff6886707d3330054eb6293dcd0c420221c7cc9da39d61240414a58176406,0xa797832a2ca0564c46c46eb804b8a1d3752deb8b084ca7aec133e6bcc884e2b2,0xc1fa0e7c923952864d09e3fe226674905ded2e86fd0019d4ef348008481a2653,0x8ac8db1ff1d0df13205c6247ae8dafde74b1d40bb7dcc32f48993c5e68026799"
+  },
+  {
+    "at": 1788643583306,
+    "totalUsd": 333.708777,
+    "holders": 895,
+    "realizedCumUsd": 45754.20699403508,
+    "txHash": "0xe33764229eea220403cb4ef69f5a9498033143f76ecb17df0ead6113257837b7,0x03f3d9474fdb0d756aa86f503f3716c91bc1b0b8c99b35f004c434fd56dcca77,0x3500aacdaa1158f5e9d589e50459c82505d3b37abba50022cc44515ce33968e3,0x3bd633e5cf90c9224d05eb9964033a8f37c0a449335ac1e047e85cadb1bd41ee,0x8b0263de7b1735f1b03eb36c74d34c8edab8b118f8da1ef2922d3ebb0609a367"
+  },
+  {
+    "at": 1788644520216,
+    "totalUsd": 333.88877,
+    "holders": 890,
+    "realizedCumUsd": 46088.104520832385,
+    "txHash": "0x5e108458a68f2985cc069cbfcb975fc8d1ae1c86be597f9f43b58f0eef1f0365,0xc16903bb9b91d9cea0551749b11605249bb97d38236dde22d5969dd5808f10ad,0xc90d99b84e3f95e2e94b0cc75ecf5b5502060c7a9be726437b0f48aaca8b8fb9,0xc688d2f28cbcf515e852a5782dd7fcbe29c844d55297dc5c22a9ed525ec8ebe3,0x135ba4457fa82d3f0930e3c0696d0cef35f74c040808c9e34ee7ca4e7b750297"
+  },
+  {
+    "at": 1788645463524,
+    "totalUsd": 624.375051,
+    "holders": 1033,
+    "realizedCumUsd": 46712.25628311848,
+    "txHash": "0xd57452f55ff69137850b1defddcec0a35044438ce5e17163465ea592740fdcb9,0x7693ce6281a6063fa6c6f82ba2289b525b2e2e1a5feae9109208a73c172a8f31,0xac636026323615ed24d87ed9d8b86a420128d4042ad88add62c96de0739dc417,0x5f02967db374db8feac2d2fe3f2c699871f70fa3d83666103455a66089b255ba,0x13a2bb77b94afc09ee37fb832d8cae01611eec9c2df86853382f72eaa39fff60,0x8581c0137c5cabe071f950e91d7c716dc82380509ffa880688fcf27fadf6c8da"
+  },
+  {
+    "at": 1788646423264,
+    "totalUsd": 462.812882,
+    "holders": 956,
+    "realizedCumUsd": 47175.14257698002,
+    "txHash": "0xdfe9b597c92adb3f5fdb61f6b1908d2b1fd2931174b628a7c8dc883198362fd4,0xda084057dbc5fb3fb3bb73380fda5e2b970c5f71bf0a16cdeafb3100d58bd89a,0xb8d007649929a86317cf6c4473042876a1a780902c995a808e3f9fb170e7f818,0x24f38db2f43cab29354031f7b3e560576639289e1753bf28abf8ec6c1eabac4a,0x98a5fa11990f09f0c0129535d6b4fd1ff9b91b757cb91bbdc88f96badbca5b85"
+  },
+  {
+    "at": 1788647427621,
+    "totalUsd": 304.538093,
+    "holders": 854,
+    "realizedCumUsd": 47480.28497044384,
+    "txHash": "0x0746fad7192eb642923282c3f0db7ceb01651c744b42e00b4f609183dd98a633,0xdd1f1a6cdb10df0ae268eaae9c9d020d161f47bbf18d2ad01ff32156056cec09,0x34ed51794c0a517369a9202a6da957845384c0b4f83425bdfbf38a41927071b0,0x73560cc982f007f799e918ce803aae2795f6153c297cb89c1fbc6d6fe251c096,0x6babefc56450e6b860ee9f2b40ed60637660e9c165e433060cf841757f137553"
+  },
+  {
+    "at": 1788648372939,
+    "totalUsd": 628.798393,
+    "holders": 1013,
+    "realizedCumUsd": 48108.349245756945,
+    "txHash": "0xd2ff5abaa86ef2261f7359b172370ac16a0346531feea4561f89e5ccb07b73f5,0xe615c36a93cf8c1d8c38583dc5b585f2a3f49076ac562afc22b92b4ee3923131,0x7cb0ed8b947eba23d7ae9a9f114e853ed8291d1817c18a4bfd1781ada5a79a96,0x9eff11c12e4c36d3cec212874aa9f0582f393c5e5ef036e1455053e4c6cab6cc,0xf50ce0eb127b7a39fd5652a671f6170fb15f2bcc63fa9eafd33ee4271b983069,0x0feeb2dbfd2787c56d29cdd08cd23dfe9f4c1e4009ce3bc46763167555e0d2af"
+  },
+  {
+    "at": 1788649332671,
+    "totalUsd": 702.25851,
+    "holders": 1041,
+    "realizedCumUsd": 48810.60919808215,
+    "txHash": "0x771125b47781c00a0ee2a47116c7f98abea7ac055f4983e9a13cd74b0eabec57,0x25cc4956afa06b9fe756840647b65da0de65180ef6a4dea045b32e17a2ae8f1c,0x5d25efd5aee6733fc5044f5dc77a1a0d51a63393a61b59135ccd2d4d2c9dc27f,0xe80d8502a0548c7bf63774dc0d596ecff454d3711a974f61085b87d62aebf91a,0xda6b5516eeb5381aafd24c7dc2c0b771bd0a4b0e3ba6c4a92bbab05bb9995b5a,0xada08da449d16ac1f1d5077dad62a5c5235d3469e94ddb856acde6948ccd2cd4"
   }
 ]
 ```
@@ -1615,7 +1968,78 @@ All 141 payout rounds from `GET https://www.arbitrageape.app/api/distributions`.
 ## Appendix E — Methodology notes
 
 - Chain reads via `https://rpc.mainnet.chain.robinhood.com`
-- Function selectors resolved through OpenChain / 4byte signature DBs.
-- USDG amounts use **6 decimals**; AA uses **18**.
-- API `distributedUsd` can differ slightly from the sum of listed rounds (~$175 in this snapshot)—treat both as approximate desk accounting and prefer onchain sums for forensic work.
-- This Markdown file is **self-contained**: status, meta, and full distribution history are embedded above rather than shipped as companion JSON files.
+- Function selectors resolved through OpenChain / 4byte signature DBs and runtime bytecode scan of `vault.runtime.hex`
+- State pinned to block `55498712` / `0x905feebb6faf85315a8f2697e121f538dcc28d4e58fd8e102d59dc3c4df65823` / `2026-09-05T23:03:40Z`
+- USDG amounts use **6 decimals**; AA uses **18**
+- API `distributedUsd` can differ slightly from the sum of listed rounds — treat both as approximate desk accounting and prefer onchain sums for forensic work
+- This Markdown file is **self-contained**: status, meta, full distribution history, pin, and surface ledger are embedded rather than shipped as companion JSON files
+- No real keys used; no transactions signed or broadcast
+
+## Appendix F — Target integrity manifest (embedded)
+
+```json
+{
+  "requested_chain_id": 4663,
+  "requested_address": "0xe2dae1c072b9f66bed999873b94798b2152af7e1",
+  "observed_chain_id": 4663,
+  "observed_address": "0xe2dae1c072b9f66bed999873b94798b2152af7e1",
+  "metadata": {
+    "name": "Arbitrage Ape",
+    "symbol": "AA",
+    "decimals": 18,
+    "total_supply": "1000000000000000000000000000",
+    "unresolved": []
+  },
+  "pins": [
+    {
+      "label": "state_head",
+      "block_number": 55498712,
+      "block_hash": "0x905feebb6faf85315a8f2697e121f538dcc28d4e58fd8e102d59dc3c4df65823",
+      "utc": "2026-09-05T23:03:40Z"
+    }
+  ],
+  "runtime": {
+    "verified_status": "PonsV2LauncherToken verified; vault unverified"
+  },
+  "scope_addresses": [
+    {
+      "address": "0xe2dae1c072b9f66bed999873b94798b2152af7e1",
+      "role": "token",
+      "chain_id": 4663,
+      "provenance": "user",
+      "runtime_status": "contract"
+    },
+    {
+      "address": "0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98",
+      "role": "vault",
+      "chain_id": 4663,
+      "provenance": "project_api_fund",
+      "runtime_status": "contract_unverified"
+    },
+    {
+      "address": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+      "role": "USDG",
+      "chain_id": 4663,
+      "provenance": "project",
+      "runtime_status": "erc20"
+    },
+    {
+      "address": "0x12b46b7746af4a902fd55198f09ecfd8c4d42956",
+      "role": "vault_owner",
+      "chain_id": 4663,
+      "provenance": "owner()_eth_call",
+      "runtime_status": "eoa"
+    },
+    {
+      "address": "0xdef933cfaeb2a2af516df1eaa2101b00b7f77af6",
+      "role": "keeper_observed",
+      "chain_id": 4663,
+      "provenance": "distribution_tx_from",
+      "runtime_status": "eoa"
+    }
+  ],
+  "report_source_id": "arbitrage-ape-dd-v3-merged",
+  "no_real_signing": true,
+  "no_broadcast": true
+}
+```
