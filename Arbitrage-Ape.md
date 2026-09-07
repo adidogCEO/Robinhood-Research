@@ -1,34 +1,45 @@
 # Arbitrage Ape ($AA) — Due Diligence Report
 
-**Generated:** 2026-09-05 ~23:15 UTC (merged v3)  
+**Generated:** 2026-09-07 ~19:55 UTC (v4 refresh)  
 **Chain:** Robinhood Chain (`4663`) — RPC-verified  
 **Exact token:** `0xe2dae1c072b9f66bed999873b94798b2152af7e1`  
 **Scope:** Product mechanics, custody/permission map, risks, onchain-verified payouts, skill-grade surface scoring  
 **Format:** Single self-contained Markdown (status + full payout history + target pin embedded)  
-**Skill:** [evm-token-due-diligence](sand-workflow:evm-token-due-diligence)
+**Skill:** [evm-token-due-diligence](sand-workflow:evm-token-due-diligence)  
+**Prior:** v3 merged 2026-09-05 (pin `55498712`)
 
 ### State pin
 | Field | Value |
 |---|---|
 | Label | `state_head` |
-| Block | `55498712` |
-| Block hash | `0x905feebb6faf85315a8f2697e121f538dcc28d4e58fd8e102d59dc3c4df65823` |
-| UTC | `2026-09-05T23:03:40Z` |
+| Block | `57099428` |
+| Block hash | `0x80e6ce7ba61459ef97604844b2c75a7123a183531275b0bb53fa1d5b2366f15c` |
+| UTC | `2026-09-07T19:54:31Z` |
 
 ---
 
 ## Executive summary
 
-Arbitrage Ape is a **live, programmatic** market-making / dislocation desk on Robinhood Chain—not a pure LARP. A funded vault holds inventory and cash; an automated keeper calls `exec` and `distribute` on a cadence; holder payouts are real **USDG** transfers from the vault.
-
-It is also **maximally centralized**: the vault is **unverified**, the **owner can withdraw any asset with no timelock**, and the operator is effectively anonymous. Treat `$AA` as a speculative claim on desk profit flow, not trustless custody.
+Arbitrage Ape remains a **live, programmatic** market-making / dislocation desk on Robinhood Chain. Since the 2026-09-05 report, holder **USDG distributions roughly doubled** (~$48.8k → ~$103.5k) while the desk stayed in `live` mode on a ~15-minute cadence. Vault cash on-chain is higher; **LP principal PnL is more negative**. Custody risk is unchanged.
 
 | Question | Answer |
 |---|---|
 | Real onchain capital + automated execution? | **Yes** |
-| Holder payments real USDG? | **Yes** (RPC-verified samples + live API) |
-| Empty “waiting for keeper” UI = inactive? | **No** — SSR placeholders; `/api/*` and chain are live |
-| Trustless / rug-resistant vault? | **NO-GO** — `withdraw` present; no timelock |
+| Holder payments real USDG? | **Yes** (RPC-verified latest round + live API) |
+| Empty “waiting for keeper” UI = inactive? | **No** — prefer `/api/*` |
+| Trustless / rug-resistant vault? | **NO-GO** — `withdraw` still present; no timelock |
+
+### Delta vs 2026-09-05 (v3)
+
+| Metric | v3 | v4 now |
+|---|---:|---:|
+| Distributed USD | ~$48.8k | **~$103,531** |
+| Realized profit | ~$49.1k | **~$118,748** |
+| Vault USDG (API / on-chain) | ~$18.1k | **~$60,742 / $60,073** |
+| LP principal PnL | ~$-37.0k | **~$-98,817** |
+| Dist rounds / unique txs | 164 / 561 | **253 / 978** |
+| $AA mark / mcap | ~$0.00179 / ~$1.79M | **~$0.00356 / ~$3,495,769** |
+| Vault $AA share | ~10.7% | **~12.03%** (on-chain) |
 
 ### Surface scores (pinned state)
 
@@ -38,10 +49,10 @@ It is also **maximally centralized**: the vault is **unverified**, the **owner c
 | Canonical LP-principal custody | High concern (vault/`exec` funded LP; owner can withdraw) |
 | Side-pool removal risk | Unknown / elevated |
 | Sellability and exit depth | Unknown (coverage — no holder-sized quotes this run) |
-| Current concentration | Elevated (vault ~10.7% `$AA`) |
+| Current concentration | Elevated (vault ~12.0% `$AA`) |
 | Historical launch integrity | Partial (Pons v2 confirmed; SIZE-cohort not completed) |
 | Admin / treasury / reward custody | **Critical** |
-| Reward accounting and liveness | Strong (operational) |
+| Reward accounting and liveness | Strong (operational; still paying) |
 | Utility and redemption rights | Weak for holders |
 | External dependencies | High |
 | Development and disclosure | Mixed (APIs good; vault unverified) |
@@ -56,7 +67,7 @@ It is also **maximally centralized**: the vault is **unverified**, the **owner c
 |---|---|
 | Site | https://www.arbitrageape.app/ |
 | Method docs | https://www.arbitrageape.app/docs |
-| X | https://x.com/ArbitrageApe (created ~2026-09-04) |
+| X | https://x.com/ArbitrageApe |
 | Vault / fund | `0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98` |
 | `$AA` fee token | `0xe2dae1c072b9f66bed999873b94798b2152af7e1` — **Arbitrage Ape** / `AA`, 18 decimals, 1B supply; Blockscout name `PonsV2LauncherToken` (verified) |
 | USDG | `0x5fc5360d0400a0fd4f2af552add042d716f1d168` — **6 decimals** |
@@ -65,150 +76,63 @@ It is also **maximally centralized**: the vault is **unverified**, the **owner c
 | Explorers | [Blockscout](https://robinhoodchain.blockscout.com/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98) · [Robinscan](https://robinscan.io/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98) |
 | Live APIs | `/api/status`, `/api/distributions`, `/api/trades`, `/api/positions`, … |
 
-**Live snapshot (API at report generation; pin `55498712`):**
+**Live snapshot (API at report generation; pin `57099428`):**
 
 | Metric | Value |
 |---|---|
 | Mode | `live` |
-| Vault ETH | ~1.2677506289738811 ETH |
-| Vault USDG | ~**$18075.664799** |
-| Vault `$AA` (onchain) | ~**107.15M** (~10.7% supply) |
-| Realized profit | ~$49116.86 |
-| Distributed (API) | ~**$48808.79** |
-| Pending owed | ~$308.06 |
-| Fee flow claimed (lifetime) | ~**$159395.35** |
-| LP principal PnL (API) | **~$-36962.94** |
-| Instruments / eligible | ~194 / ~89 |
-| Pools tracked v3/v4 | 373 / 7652 |
-| `$AA` mark (API) | ~$0.0017902589788860127 · mcap ~$1790259 |
+| Vault ETH | ~1.592740 ETH (on-chain ~1.592740) |
+| Vault USDG | ~**$60,742.09** API · **$60,072.74** on-chain |
+| Vault `$AA` (onchain) | ~**120,307,567** (~12.03% supply) |
+| Realized profit | ~$118,747.92 |
+| Distributed (API) | ~**$103,530.98** |
+| Pending owed | ~$846.92 |
+| Fee flow claimed (lifetime) | ~**$227,563.31** |
+| LP principal PnL (API) | **~$-98,817.35** |
+| Operator PnL (API) | ~$-3,283.014486199645 |
+| Instruments / eligible | ~194 / ~92 |
+| Pools tracked v3/v4 | 387 / 7836 |
+| `$AA` mark (API) | ~$0.003555004227908025 · mcap ~$3,495,769 |
 
 ## 2. How it works
 
-### 2.1 Market premise
+Unchanged from v3 in substance: Pons v2 creator-fee → vault inventory → sell dislocations via keeper `exec` → accrue realized pot → ~15m `distribute` USDG to eligible `$AA` holders. Prefer live `/api/*` over empty SSR chrome.
 
-Tokenized equities on Robinhood Chain trade across fragmented Uniswap v3/v4 (and related) venues. Thin depth means a single aggressive order can push a pool **far above** the primary-market share price. That dislocation is inventory-constrained profit: whoever already holds the asset can sell into it.
-
-The desk’s design: **be standing inventory** where dislocations happen, and **sell under strict profit rules** when they do.
-
-### 2.2 Capital formation
-
-1. `$AA` launches on **Pons v2**; the vault is the **creator-fee recipient**.
-2. Creator fees accrue in USDG to Pons escrow; the keeper **claims into the vault** (API: ~$149k claimed lifetime).
-3. Fee cash buys thin / pump-prone stock tokens **at or under reference** (rotation, clip caps, max acquisition premium), building inventory for later sells.
-4. Optional **LP bands** around premium pools; collected fees also enter the holder profit pot.
-
-### 2.3 Pricing and dislocation filter
-
-- Reference \(\hat{P}\) from primary quotes (Chainlink fallback); ~15s refresh.
-- Deviation \(\delta = (P_{pool} - \hat{P}) / \hat{P}\).
-- Typical actionable threshold **≥ +25%** (widened when NYSE session closed).
-- **Fillability probe**: simulated quote of a fixed notional through the pool’s quoter—mirage prices that cannot fill are discarded.
-- Deep instruments (tiny impact at $10k) are excluded; thin eligible set is re-surveyed on a schedule.
-
-### 2.4 Execution
-
-- When a held name prints a real dislocation, size the max sell whose **effective** price clears a floor vs reference and cost basis.
-- Tranche exits (fraction per cooldown) rather than slamming the whole book.
-- Onchain path: keeper → vault **`exec(address,uint256,bytes)`** (`0x0565bb67`), interacting with allowlisted venues (e.g. Uniswap v4 PoolManager observed in logs).
-
-### 2.5 Profit accounting and holder payouts
-
-- Realized profit \(\Pi\) accumulates from sells (proceeds − average cost of size sold) and fee collections booked to the pot.
-- Owed to holders: \(O = \Pi - D\) (never resets).
-- About every **15 minutes**, once \(O \ge\) ~**$300**, pay `min(O, cash)` in **USDG** pro-rata to eligible `$AA` holders (AMM/desk addresses excluded).
-- Large holder sets are split across **multiple distribution txs** per round (~200 recipients per tx observed).
-- Onchain path: keeper → vault **`distribute(address,address[],uint256[])`** (`0x15270ace`).
-
-### 2.6 Why the website can look “dead”
-
-SSR/marketing HTML often shows “Waiting for the keeper…”, “Last payout: none yet”, empty books. **Live JSON APIs are populated.** Prefer `/api/status`, `/api/distributions`, and explorer txs over the empty chrome.
-
----
+### 2.4–2.5 Onchain paths (still observed)
+- Keeper → vault **`exec(address,uint256,bytes)`** (`0x0565bb67`)
+- Keeper → vault **`distribute(address,address[],uint256[])`** (`0x15270ace`)
 
 ## 3. Custody and permission map (bytecode-level)
 
-Vault runtime bytecode ≈ **4803 bytes**. **Source not verified** on explorers (`isVerified: false`). Selectors resolved via public signature databases:
+Vault **source still unverified**. At pin `57099428` runtime still contains:
 
-### 3.1 Roles
+| Function | Selector | Present |
+|---|---|---|
+| `withdraw(address,address,uint256)` | `0xd9caed12` | **Yes** |
+| `exec(address,uint256,bytes)` | `0x0565bb67` | **Yes** |
+| `distribute(...)` | `0x15270ace` | **Yes** |
 
 | Role | Address | Notes |
 |---|---|---|
-| `owner()` | `0x12b46b77…42956` | Ownable2Step; `pendingOwner()` currently zero |
-| `keeper()` | `0xdef933cf…7af6` | Matches live `exec` / `distribute` caller |
+| `owner()` | `0x12b46b7746af4a902fd55198f09ecfd8c4d42956` | unchanged; `pendingOwner()` empty |
+| `keeper()` | `0xdef933cfaeb2a2af516df1eaa2101b00b7f77af6` | matches distribute tx `from` |
 
-### 3.2 Owner / admin surface
-
-| Function | Selector | Risk implication |
-|---|---|---|
-| `owner()` | `0x8da5cb5b` | Single privileged admin |
-| `transferOwnership(address)` | `0xf2fde38b` | Ownership can move |
-| `acceptOwnership()` | `0x79ba5097` | Two-step accept |
-| `renounceOwnership()` | `0x715018a6` | Can renounce (unlikely while operating) |
-| `withdraw(address,address,uint256)` | `0xd9caed12` | **Owner can pull any ERC-20/asset to any recipient — no timelock (docs + ABI)** |
-| `setKeeper(address)` | `0x748747e6` | Swap the automation agent |
-| `setTarget(address,bool)` | `0x80ffe77f` | Allowlist execution targets |
-| `setSpender(address,bool)` | `0x6be3f3e0` | Allowlist spenders / approvals |
-| `setDailyCap(address,uint256)` | `0xda09a331` | Cap distribution/outflow per asset |
-| `approveToken(address,address,uint256)` | `0xda3e3397` | Owner-gated approvals |
-
-### 3.3 Keeper / automation surface
-
-| Function | Selector | Observed use |
-|---|---|---|
-| `exec(address,uint256,bytes)` | `0x0565bb67` | Trading, LP, fee claims — every ~1–5 min |
-| `distribute(address,address[],uint256[])` | `0x15270ace` | Holder USDG payouts — ~15–18 min batches |
-| `isTarget(address)` | `0xaa642274` | View allowlist |
-| `isSpender(address)` | `0x9a206ece` | View spender allowlist |
-
-Docs claim `exec` reverts if target not allowlisted (`TargetNotAllowed`). Approvals are intended to be spender-gated the same way.
-
-### 3.4 Distribution rate limits (onchain views)
-
-| Asset | `dailyCap` | Interpretation |
-|---|---|---|
-| USDG | `50000000000` raw | **50,000 USDG / rolling day** (6 decimals) at check time |
-| AA | `0` | No AA distribution cap configured (or unused) |
-| ETH (address zero) | `0` | No ETH dist cap |
-
-Related views/errors in bytecode: `windowStart(address)`, `CapExceeded`, `InsufficientBalance`, `ReentrancyGuardReentrantCall`.
-
-**Important:** Daily caps constrain the **keeper distribution path**. They do **not** neutralize **`owner.withdraw`**, which remains the dominant rug vector.
-
-### 3.5 Invariants (claimed vs reality)
-
-| Claimed invariant | Assessment |
-|---|---|
-| Balances live at one fund address | **Holds in practice** — inventory/cash at vault |
-| Agent wallet holds only gas | **Consistent** — keeper calls vault; nonce ~2820 |
-| Agent replaceable | **Yes** — `setKeeper` |
-| Distribution rate-limited | **Partial** — USDG daily cap on; owner withdraw unconstrained |
-| Owner can withdraw anytime | **True** — documented and present in ABI |
-
----
+**Important:** Daily caps (if any) constrain the **keeper distribution path**. They do **not** neutralize **`owner.withdraw`**.
 
 ## 4. Risks
 
 ### Critical
-
-1. **Instant owner drain** — `withdraw` with no timelock. Holding `$AA` for yield does not protect vault capital from the deployer.
-2. **Unverified custody** — No public verified source; no third-party audit found.
-3. **Anonymous / day-old social presence** — Hard to attribute accountability.
+1. **Instant owner drain** — `withdraw` with no timelock (still true at v4 pin).
+2. **Unverified custody** — no public verified vault source; no audit found.
+3. **Anonymous / thin social accountability**.
 
 ### High
+4. **Single keeper** — stop / compromise / malicious `setKeeper`.
+5. **Economic fragility** — LP principal PnL worsened (~$-37k → ~$-99k) while distributions continued.
+6. **Circular / reflexive revenue** risk on fee-token MM and creator-fee loop.
 
-4. **Single keeper** — Automation can stop, be key-compromised, or be replaced maliciously by owner.
-5. **Economic fragility** — API already shows large **negative LP principal PnL** while distributions continue. Desk can lose inventory/LP capital even as the “realized pot” pays holders.
-6. **Circular / reflexive revenue** — Fee token self-MM, high-fee pools, and creator-fee → buy inventory → sell spikes can be fragile or partially circular.
-
-### Product / market
-
-7. Edge depends on thin stock-token pools and closed-market dislocations; competition or deeper liquidity shrinks it.
-8. Oracle / reference failure when NYSE closed or feeds lag.
-9. `$AA` price ≠ vault NAV; it is a speculative claim on future distributions.
-
-### UX / perception
-
-10. Empty SSR dashboard vs live APIs makes the product easy to dismiss as theater—or easy to overtrust without reading permissions.
+### Product / market / UX
+7–10. Same as v3 (thin pool edge, oracle, `$AA` ≠ NAV, empty SSR vs live APIs).
 
 ---
 
@@ -216,172 +140,106 @@ Related views/errors in bytecode: `windowStart(address)`, `CapExceeded`, `Insuff
 
 | Metric | Value |
 |---|---|
-| Distribution rounds | **164** |
-| Onchain payout transaction hashes | **561** unique |
-| Rounds using multiple txs | **115** |
-| Sum of API round totals | **$48,633.68** |
-| Desk `distributedUsd` | **$48,808.79** |
+| Distribution rounds | **253** |
+| Onchain payout transaction hashes | **978** unique |
+| Rounds using multiple txs | **203** |
+| Sum of API round totals | **$103,355.87** |
+| Desk `distributedUsd` | **$103,530.98** |
 | First round | 2026-09-04 13:19 UTC · $0.8666 · 33 holders |
-| Latest round | 2026-09-05 23:02 UTC · $702.25851 · 1041 holders · 6 txs |
-| Largest round | 2026-09-05 20:39 UTC · **$2,779.56** · 1346 holders |
-| Cadence | ~15–18 minutes |
+| Latest round | 2026-09-07 19:37 UTC · $477.820844 · 851 holders · 5 txs |
+| Largest round | 2026-09-07 02:08 UTC · **$3,929.99** · 1316 holders |
+| Cadence | ~15–18 minutes (still live) |
 
 ### Size distribution (by round `totalUsd`)
 
 | Band | Rounds | Sum USD |
-|---|---|---|
+|---|---:|---:|
 | < $1 | 11 | $8.22 |
 | $1–10 | 24 | $70.27 |
 | $10–100 | 39 | $2,106.71 |
-| $100–500 | 55 | $16,760.78 |
-| $500–1,000 | 26 | $16,708.74 |
-| ≥ $1,000 | 9 | $12,978.97 |
+| $100–500 | 110 | $36,614.72 |
+| $500–1,000 | 50 | $33,432.74 |
+| ≥ $1,000 | 19 | $31,123.22 |
 
-Full machine-readable feed (also embedded in Appendix D): https://www.arbitrageape.app/api/distributions
+Full feed: https://www.arbitrageape.app/api/distributions
 
 ---
 
 ## 6. Onchain-verified payout samples
 
-Method: Robinhood public RPC `eth_getTransactionReceipt` — sum USDG `Transfer` logs **from the vault** (6 decimals). Caller in all cases: **keeper** → **vault**, selector **`distribute` (`0x15270ace`)**, status success.
+### A–C) Historical samples from v3
+Earliest / large multi-tx samples from 2026-09-04–05 remain valid historical evidence (see prior report / Appendix D hashes).
 
-### A) Earliest round — exact match
-
-| Field | Value |
-|---|---|
-| Time | 2026-09-04 13:19 UTC |
-| API total | **$0.8666** |
-| Holders | 33 |
-| Tx count | 1 |
-| Tx | `0x567e40ea130d06d74192387b2fe240c659dc2b70f50c51ad39b8ccdcf14a2f51` |
-| Onchain USDG from vault | **$0.866600** |
-| Recipient transfers | **33** |
-| Explorer | https://robinhoodchain.blockscout.com/tx/0x567e40ea130d06d74192387b2fe240c659dc2b70f50c51ad39b8ccdcf14a2f51 |
-
-### B) Largest round — multi-tx (first 2 of 7 verified)
+### D) Latest round — full multi-tx (v4 pin) — exact match
 
 | Field | Value |
 |---|---|
-| Time | 2026-09-05 14:06 UTC |
-| API total | **$1,514.41** |
-| Holders | 1,283 |
-| Tx count | 7 |
-
-| Tx | USDG from vault | Recipients |
-|---|---|---|
-| `0xfb07d1583312058f9469cde4d757b4aa0898729d6db657bd339181bc193cd581` | **$1,278.75** | 200 |
-| `0xe3d6bc5a343f6f1d8df7c0135a32b44f0ee9681a6953ad02705b83e87b1dc815` | **$146.18** | 200 |
-| **Subtotal (2/7)** | **$1,424.93** | — |
-
-Remainder (~$89) sits on the other five txs in the same round—consistent with batching.
-
-### C) Latest round — multi-tx (first 2 of 5 verified)
-
-| Field | Value |
-|---|---|
-| Time | 2026-09-05 16:50 UTC |
-| API total | **$405.69** |
-| Holders | 968 |
+| Time | 2026-09-07 19:37 UTC |
+| API total | **$477.820844** |
+| Holders | 851 |
 | Tx count | 5 |
+| Onchain USDG from vault | **$477.820844** |
+| Δ API vs onchain | ~0 |
+| Caller | keeper → vault · selector **`distribute` (`0x15270ace`)** · all success |
 
 | Tx | USDG from vault | Recipients |
-|---|---|---|
-| `0x6ddbe65a384f0bbca8b8fd65a71b0011129839de5c2b306f8e4dace8be88924c` | **$342.02** | 200 |
-| `0xbee3b560409a0a71af6e7d4304ea0af50bdab068a5b3d3bfa82f88d5c91cd85a` | **$41.12** | 200 |
-| **Subtotal (2/5)** | **$383.13** | — |
-
-### Pattern
-
-- Small rounds: **1 tx**, recipient count ≈ holder count, USDG sum **matches API to the cent**.
-- Large rounds: **several sequential keeper txs**, often **~200 transfers each**, totaling the round.
-- Trading uses **`exec`**; payouts use **`distribute`**—different code paths, both automated.
+|---|---:|---:|
+| `0x11ff524b78f7695fe7f9297f3d31890d7918a6ee1ec122bb4192a9498a316e81` | **$429.224566** | 200 |
+| `0x72548676e8874013e618b029d7da89f69b515bee17b40f2d5ab119730427b04c` | **$33.387370** | 200 |
+| `0x8dd7ddf699bd31d4d811fa873075298b3732634aef17154cdd13837fbae8ba38` | **$10.627633** | 200 |
+| `0xfdee3fac605d58c73a4a0de26d8a421565891a613c46d0dac2cb7c1f15e1693e` | **$4.014524** | 200 |
+| `0x99c4de8c08dd401e260e7407a53c4d54b6bd9a48e08da1cbe79b2d507b008acf` | **$0.566751** | 51 |
 
 ---
 
 ## 7. Holder distribution mechanics
 
-System-level recipient behavior from docs and observed `distribute` txs:
-
-- Payouts are **pro-rata `$AA` balance** at snapshot (docs: local Transfer history, spot-checked vs chain).
-- Eligible supply excludes AMM reserves, protocol machinery, and desk addresses.
-- Sub-dust allocations stay in the pot.
-- Observed onchain: multi-recipient USDG fans from the vault in a single `distribute` call; larger rounds chunk addresses across txs.
-- Holder counts grew from **~33** (first round) to **~900–1,300** on recent large rounds.
+Unchanged: pro-rata eligible `$AA`, exclude AMM/desk, multi-tx batching ~200 recipients/tx on large rounds.
 
 ---
 
-> **Note:** Samples A–C above were RPC-verified at the original ~17:10 UTC generation. They remain valid historical evidence. Desk totals above are **refreshed** to the pinned/live API state.
+## 8. Concentration (on-chain vault pin)
 
-## 7. Holder distribution mechanics
+| Address | ~% supply | Note |
+|---|---:|---|
+| `0x0feB08fcF34F5c0e270261bC79BaFC0F8eb87f98` | **12.03%** | vault (pin balance) |
 
-System-level recipient behavior from docs and observed `distribute` txs:
-
-- Payouts are **pro-rata `$AA` balance** at snapshot (docs: local Transfer history, spot-checked vs chain).
-- Eligible supply excludes AMM reserves, protocol machinery, and desk addresses.
-- Sub-dust allocations stay in the pot.
-- Observed onchain: multi-recipient USDG fans from the vault in a single `distribute` call; larger rounds chunk addresses across txs.
-- Holder counts grew from **~33** (first round) to **~900–1,300** on recent large rounds.
+Full top-holder page refresh was not re-scraped this run (explorer Cloudflare coverage limit). Prior v3 page had vault ~10.7% and Uniswap v4 PoolManager as pool inventory.
 
 ---
 
-## 8. Concentration (holders page, refreshed)
-
-Blockscout `holders_count` ≈ **1700** at fetch time. Top of first holders page:
-
-| Address | % supply | Note |
-|---|---|---|
-| `0x0feB08fcF34F5c0e270261bC79BaFC0F8eb87f98` | 10.7154% | vault |
-| `0x267444D099b10fB5Ed7c3Cc7B7c767AdcA574952` | 8.1633% |  |
-| `0x8366a39CC670B4001A1121B8F6A443A643e40951` | 4.3437% | Uniswap v4 PoolManager (LP inventory) |
-| `0x47bfaF27eD550FfaA24a593E772A5947AF9f6523` | 3.0013% |  |
-| `0x05607d87494C3f9D6e43Be2C2E5Ed23A95574548` | 2.636% |  |
-| `0xB3F4bE999FD39f4a56F5a9713DcAed3Edb310a14` | 2.632% |  |
-| `0xE46a27A4e371d10F5A8155f44da25eb5F91fA835` | 2.3488% |  |
-| `0xa5239426423e2600C1DC35A8fce400929C547e4d` | 1.4299% |  |
-| `0x2032f86ef7f40e91cA1B1AF304A17d9Ad3881a90` | 1.3048% |  |
-| `0x4d8eDF53399736052850646b43E3329c66BB49DC` | 1.2176% |  |
-| `0x77dc0CA15471d42Bd326279526e8d6D7EE10E74a` | 1.1999% |  |
-| `0x0990A6A05bFF0c441D99b7301bB2b07816Eab496` | 1.1065% |  |
-| `0x4a1281eb29Bc0061123dbbe9DA699e3F255EbEE7` | 1.0993% |  |
-| `0x696d1265C8Fc4F14797aBEBFAe3C43EBFA9D8e28` | 1.0016% |  |
-| `0x3d957C9Ea42C8743b462abD451E3c93F249D4ace` | 0.9965% |  |
-
-Vault alone ≈ **10.7%** of supply. Uniswap v4 PoolManager balance is **pool inventory**, not a retail holder.
-
----
-
-## 9. Finding-to-evidence ledger (new)
+## 9. Finding-to-evidence ledger (v4)
 
 | ID | Proposition | Evidence | Confidence | Stale if |
 |---|---|---|---|---|
-| F1 | Chain is `4663` | `eth_chainId` in pin | High | other chain |
-| F2 | Exact `$AA` is `0xe2dae1c072b9f66bed999873b94798b2152af7e1` | token meta + holders | High | — |
-| F3 | Vault `owner()` is `0x12b46b7746af4a902fd55198f09ecfd8c4d42956` | eth_call `0x8da5cb5b` at pin | High | ownership transfer |
-| F4 | `withdraw(address,address,uint256)` in vault runtime | selector `0xd9caed12` in `vault.runtime.hex` | High | new deploy |
-| F5 | `exec` / `setKeeper` / `keeper` / `0x15270ace` present | runtime selector scan | High | new deploy |
-| F6 | Vault unverified | Blockscout `is_verified: false` | High | verification |
-| F7 | Live distributions accruing | `/api/status` + 164 rounds | High | API change |
-| F8 | Early distribute succeeded | tx `0x567e40ea…2f51` keeper→vault | High | — |
-| F9 | Vault ~10.7% `$AA` | holders page + balance call | High | transfers |
-| F10 | `$AA` is Pons v2 launcher token | Blockscout contract name/creator | High | — |
+| F1 | Chain is `4663` | `eth_chainId` at pin | High | other chain |
+| F2 | Exact `$AA` is `0xe2dae1c0…af7e1` | token + desk API | High | — |
+| F3 | Vault `owner()` unchanged | eth_call at pin | High | ownership transfer |
+| F4 | `withdraw` still in vault runtime | selector `0xd9caed12` in code | High | new deploy |
+| F5 | `exec` / `distribute` present | bytecode scan at pin | High | new deploy |
+| F6 | Vault unverified | explorers (prior + ongoing) | High | verification |
+| F7 | Distributions still accruing | `/api/distributions` 253 rounds | High | API change |
+| F8 | Latest distribute matches API | 5 receipts sum $477.820844 | High | — |
+| F9 | Vault ~12.03% `$AA` | balanceOf at pin | High | transfers |
+| F10 | `$AA` is Pons v2 launcher token | prior Blockscout name/creator | High | — |
 | F11 | Holder-sized exit depth OK | **not obtained** | — | — |
-| F12 | Launch cohort clean (SIZE-pattern) | **not investigated** | — | — |
+| F12 | Launch cohort clean | **not investigated** | — | — |
 | F13 | Owner never withdrew treasury | **not proven** | — | — |
 
 ---
 
 ## 10. Bottom line
 
-**Real desk. Real keeper. Real USDG payouts.**  
-**Not trustless. Soft-rug capable by design (owner withdraw).**  
+**Still a real desk. Still a real keeper. Still real USDG payouts — larger book than on 2026-09-05.**  
+**Still not trustless. Soft-rug capable by design (owner withdraw).**  
 **NO-GO under a rug-resistance requirement**; acceptable only as **operator-dependent speculative yield** on `$AA`, with custody and LP/inventory risk the distribution feed alone will not show.
 
 ### Coverage limits (not passes)
 1. Pinned holder-sized `$AA` sell quotes  
 2. SIZE-pattern launch-cohort accounting  
-3. Receipt-level fee→inventory→distribute conservation + owner-withdraw history  
-4. Exhaustive side-pool LP inventory beyond API bands  
-5. `pendingOwner()` at pin (RPC 429 on one call)
+3. Full owner-withdraw history / fee→inventory conservation  
+4. Fresh Blockscout top-holders page (CF)  
+5. Exhaustive side-pool LP beyond API bands  
 
 ---
 
@@ -391,375 +249,231 @@ Vault alone ≈ **10.7%** of supply. Uniswap v4 PoolManager balance is **pool in
 - Docs: https://www.arbitrageape.app/docs
 - Status API: https://www.arbitrageape.app/api/status
 - Distributions API: https://www.arbitrageape.app/api/distributions
-- Vault (Blockscout): https://robinhoodchain.blockscout.com/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98
-- Vault (Robinscan): https://robinscan.io/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98
+- Vault: https://robinhoodchain.blockscout.com/address/0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98
 - `$AA`: https://robinhoodchain.blockscout.com/token/0xe2dae1c072b9f66bed999873b94798b2152af7e1
-- Public prior copy: https://github.com/adidogCEO/Robinhood-Research/blob/main/Arbitrage-Ape.md
+- Public copy: https://github.com/adidogCEO/Robinhood-Research/blob/main/Arbitrage-Ape.md
 
 ## Appendix B — Live desk status (embedded)
-
-Snapshot of `GET https://www.arbitrageape.app/api/status` at this report generation (refreshed). Formerly a separate `status.json`.
 
 ```json
 {
   "mode": "live",
   "feeToken": "0xe2dae1c072b9f66bed999873b94798b2152af7e1",
   "fund": "0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98",
-  "ethBalance": "1.2677506289738811",
-  "ethUsd": 2484.62495218,
+  "ethBalance": "1.5927402518827611",
+  "ethUsd": 2490.98276109,
   "ethFloatTargetUsd": 3000,
-  "usdgBalance": 18075.664799,
-  "realizedProfitUsd": 49116.8582435298,
-  "operatorPnlUsd": -53.58,
-  "lpPrincipalPnlUsd": -36962.94028217039,
-  "distributedUsd": 48808.79344900001,
+  "usdgBalance": 60742.094358,
+  "realizedProfitUsd": 118747.92360513941,
+  "operatorPnlUsd": -3283.014486199645,
+  "lpPrincipalPnlUsd": -98817.34764841342,
+  "distributedUsd": 103530.98157799993,
+  "reserveUsd": 14370.024580832274,
+  "distributionShareBps": 7500,
   "minDistributionUsd": 300,
-  "pendingProfitUsd": 308.06479452978965,
-  "lastDistributionAt": 1788649332671,
-  "nextDistributionAt": 1788650232671,
-  "lastScanAt": 1788650141825,
-  "lastSurveyAt": 1788574309360,
-  "referenceAt": 1788650141170,
-  "marketOpen": false,
-  "thresholdBps": 3500,
+  "pendingProfitUsd": 846.9174463071977,
+  "lastDistributionAt": 1788809834916,
+  "nextDistributionAt": 1788810734916,
+  "lastScanAt": 1788810601645,
+  "lastSurveyAt": 1788749588387,
+  "referenceAt": 1788810601292,
+  "marketOpen": true,
+  "thresholdBps": 2500,
   "pools": {
-    "v3": 373,
-    "v4": 7652
+    "v3": 387,
+    "v4": 7836
   },
   "instruments": 194,
-  "eligible": 89,
+  "eligible": 92,
   "feed": {
     "live": true,
-    "lastEventAt": 1788650141726,
-    "events": 45279,
-    "since": 1788648072668
+    "lastEventAt": 1788810582210,
+    "events": 21188,
+    "since": 1788810555335
   },
   "backfill": {
-    "head": "55505623",
-    "v3": "55505624",
-    "v4": "55505624",
+    "head": "57096258",
+    "v3": "57096259",
+    "v4": "57096259",
     "caughtUp": true,
-    "at": 1788650117062
+    "at": 1788810551922
   },
   "feeFlow": {
     "escrowUsd": 0,
-    "claimedUsd": 159395.3490740001,
-    "lastClaimAt": 1788648609645,
+    "claimedUsd": 227563.3077810002,
+    "lastClaimAt": 1788810491084,
     "phase": 2,
     "recipientIsVault": true,
-    "at": 1788650106324
+    "at": 1788810491288
   },
   "token": {
-    "priceUsd": 0.0017902589788860127,
-    "mcapUsd": 1790258.9788860127,
-    "supply": 1000000000,
-    "at": 1788650143393
+    "priceUsd": 0.003555004227908025,
+    "mcapUsd": 3495769.4038454993,
+    "supply": 983337622.049079,
+    "at": 1788810597501
+  },
+  "burn": {
+    "qty": 16680435.532890057,
+    "usd": 18756.54249617989,
+    "count": 85,
+    "lastAt": 1788807494065,
+    "lastTx": "0x79aea4ff2c1ff6f176ba2c9ea13a4e504c97a498bf09559b95f7ea1be451bddb",
+    "supply": 983319564.467149
   },
   "lp": {
     "enabled": true,
     "bands": [
       {
-        "symbol": "AI",
-        "band": "AI",
-        "pool": "0x7aebd80541bfaaf23dbb6e99ce13d4d31c1a84c91414f971eadbff7db5f85995",
+        "symbol": "RSTR",
+        "band": "RSTR",
+        "pool": "0xe809802ee8fa68bae3a2e102a47d2b5a7a5d23ecf2c562c720aba0d9b348f0f1",
         "protocol": "v4",
-        "capitalUsd": 2000,
+        "capitalUsd": 6000,
         "mode": "two-sided",
-        "fee": 2300,
-        "stockIs0": true,
+        "fee": 50000,
+        "stockIs0": false,
         "quoteSymbol": "USDG",
         "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 2500,
+        "maxLossBps": 3500,
         "hooked": false,
         "position": {
-          "tokenId": "1917064",
-          "lowerUsd": 0.2545573955240883,
-          "upperUsd": 0.39861813749719627,
-          "depositUsd": 882.85024,
-          "depositQty": 2872.0961202523567,
-          "depositStockCostUsd": 912.2449209537732,
+          "tokenId": "2125592",
+          "lowerUsd": 0.0010947201721804812,
+          "upperUsd": 0.002204418559794443,
+          "depositUsd": 2646.112173,
+          "depositQty": 1770604.0954947,
+          "depositStockCostUsd": 2553.8089024483625,
           "depositQuoteQty": 0,
-          "stockQty": 5232.044397843999,
-          "cashUsd": 194.84987259319865,
-          "quoteQty": 194.84987259319865,
-          "valueUsd": 1596.096097734623,
-          "feesUnclaimedUsd": 0.8547193526085889,
-          "feesCollectedUsd": 63.735693612517544,
+          "stockQty": 1410198.4101942428,
+          "cashUsd": 3221.6290994808573,
+          "quoteQty": 3221.6290994808573,
+          "valueUsd": 5512.918313188377,
+          "feesUnclaimedUsd": 44.93514694428705,
+          "feesCollectedUsd": 1024.334006044927,
           "inRange": true,
-          "openedAt": 1788622632173,
-          "txHash": "0x785340acf6f604fd5472bb0c0de5682c70cc97df959199e0cecbaf2ecb100e84"
+          "openedAt": 1788807939671,
+          "txHash": "0x33012b3f8e88aff436e036a441d7057738ff64416807f7edf636eb5ed7a61362"
         },
-        "spotUsd": 0.2678200180638461,
-        "refUsd": 0.2678200180638461,
-        "feesCollectedUsd": 188.9202586335725,
+        "spotUsd": 0.0016517068909057053,
+        "refUsd": 0.0016247991751684888,
+        "feesCollectedUsd": 2292.1752595313874,
         "lastAction": null,
-        "at": 1788650145449
+        "at": 1788810601998
+      },
+      {
+        "symbol": "ORBIO",
+        "band": "ORBIO",
+        "pool": "0x4b83b47e62e9a5986a7badf9d2369911034a01c079532ede3c2819f332ac830a",
+        "protocol": "v4",
+        "capitalUsd": 6000,
+        "mode": "two-sided",
+        "fee": 50000,
+        "stockIs0": false,
+        "quoteSymbol": "USDG",
+        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "maxLossBps": 3500,
+        "hooked": false,
+        "position": {
+          "tokenId": "2122274",
+          "lowerUsd": 0.01892258703211098,
+          "upperUsd": 0.02822861813739592,
+          "depositUsd": 2700,
+          "depositQty": 119612.59343298877,
+          "depositStockCostUsd": 3195.875143907136,
+          "depositQuoteQty": 0,
+          "stockQty": 109705.0609741903,
+          "cashUsd": 2930.302618474567,
+          "quoteQty": 2930.302618474567,
+          "valueUsd": 5500.896695341262,
+          "feesUnclaimedUsd": 25.593938031403415,
+          "feesCollectedUsd": 407.8327564416887,
+          "inRange": true,
+          "openedAt": 1788803666064,
+          "txHash": "0xe5fad534f5f255cf2827f2329697a6697e2430c6674ff04a160588a333ac1209"
+        },
+        "spotUsd": 0.02343186407299353,
+        "refUsd": 0.02343186407299353,
+        "feesCollectedUsd": 2289.896994061637,
+        "lastAction": null,
+        "at": 1788810602759
+      },
+      {
+        "symbol": "PERPSHOOD",
+        "band": "PERPSHOOD",
+        "pool": "0x5aaaa68d5731cde4ed3c9fd72903e125c204dc428777ab568364e0c29a7d9937",
+        "protocol": "v4",
+        "capitalUsd": 6000,
+        "mode": "two-sided",
+        "fee": 50000,
+        "stockIs0": false,
+        "quoteSymbol": "USDG",
+        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "maxLossBps": 3500,
+        "hooked": false,
+        "position": {
+          "tokenId": "2118344",
+          "lowerUsd": 0.0038207100574393876,
+          "upperUsd": 0.005699715638360709,
+          "depositUsd": 2586.831331,
+          "depositQty": 566854.8417486,
+          "depositStockCostUsd": 2745.4631414477976,
+          "depositQuoteQty": 0,
+          "stockQty": 749154.3552172722,
+          "cashUsd": 1763.3772083735385,
+          "quoteQty": 1763.3772083735385,
+          "valueUsd": 5112.533160764488,
+          "feesUnclaimedUsd": 48.152971593890356,
+          "feesCollectedUsd": 959.8588207824257,
+          "inRange": true,
+          "openedAt": 1788799194836,
+          "txHash": "0xee1dc81699beeccfea4d8d86e0fa8644f0c99ad19a477314d02a0dd5b24d49f0"
+        },
+        "spotUsd": 0.004381596569182787,
+        "refUsd": 0.004470581968944992,
+        "feesCollectedUsd": 3163.280909769805,
+        "lastAction": null,
+        "at": 1788810589083
       },
       {
         "symbol": "AA",
         "band": "AA",
         "pool": "0xe2156fc6454acef70a7763cf0f90e207c182880388ab3d381b84dc5d2e91b1bf",
         "protocol": "v4",
-        "capitalUsd": 30000,
+        "capitalUsd": 20000,
         "mode": "two-sided",
         "fee": 50000,
         "stockIs0": false,
         "quoteSymbol": "USDG",
         "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 6000,
+        "maxLossBps": 3500,
         "hooked": false,
         "position": {
-          "tokenId": "1959518",
-          "lowerUsd": 0.0010413326425273775,
-          "upperUsd": 0.0024362471030970516,
-          "depositUsd": 13043.90594,
-          "depositQty": 8402565.8619081,
+          "tokenId": "2127104",
+          "lowerUsd": 0.0024362471030970516,
+          "upperUsd": 0.005699715638360709,
+          "depositUsd": 8597.561471,
+          "depositQty": 2423031.4783655996,
           "depositStockCostUsd": 0,
           "depositQuoteQty": 0,
-          "stockQty": 5841316.2373495735,
-          "cashUsd": 17357.721915912505,
-          "quoteQty": 17357.721915912505,
-          "valueUsd": 13043.90594,
-          "feesUnclaimedUsd": 0,
-          "feesCollectedUsd": 792.7190459130621,
+          "stockQty": 2648893.2603197517,
+          "cashUsd": 7778.668731239769,
+          "quoteQty": 7778.668731239769,
+          "valueUsd": 8597.561471,
+          "feesUnclaimedUsd": 30.027433005241093,
+          "feesCollectedUsd": 327.41145973758955,
           "inRange": true,
-          "openedAt": 1788648388358,
-          "txHash": "0xac1ded7e070e784764cf3c74d79083afcfdc6b122199f804e5da063904acd6d1"
+          "openedAt": 1788810211905,
+          "txHash": "0xe7af34f8cb780738a6402872f5f80ef20136ef768ec99f43b97fc16770af9a16"
         },
-        "spotUsd": 0.0017897823772803907,
-        "refUsd": 0.0017900206780832018,
-        "feesCollectedUsd": 26838.855143109387,
+        "spotUsd": 0.003560841305887195,
+        "refUsd": 0.0035481012156911287,
+        "feesCollectedUsd": 55218.17378061839,
         "lastAction": null,
-        "at": 1788650146317
-      },
-      {
-        "symbol": "PONS",
-        "band": "PONS",
-        "pool": "0x5cf9e7a7c416d1a1673a013c1bb311a1cf57be2944616949c2dd15e4624a3bff",
-        "protocol": "v4",
-        "capitalUsd": 10000,
-        "mode": "two-sided",
-        "fee": 7000,
-        "stockIs0": true,
-        "quoteSymbol": "USDG",
-        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 6000,
-        "hooked": false,
-        "position": {
-          "tokenId": "1882106",
-          "lowerUsd": 0.5285776927669701,
-          "upperUsd": 1.2000863642810538,
-          "depositUsd": 4466.79144,
-          "depositQty": 5680.9038869999995,
-          "depositStockCostUsd": 4475.322743821929,
-          "depositQuoteQty": 0,
-          "stockQty": 3585.1734212662523,
-          "cashUsd": 6254.872126948857,
-          "quoteQty": 6254.872126948857,
-          "valueUsd": 9554.640282183835,
-          "feesUnclaimedUsd": 0,
-          "feesCollectedUsd": 107.10558963084192,
-          "inRange": true,
-          "openedAt": 1788596219535,
-          "txHash": "0x99d4e6e99f2ecf46237264f96b6bfd611928aaafa870afd3b05b2d6e185510d8"
-        },
-        "spotUsd": 0.9161727428135038,
-        "refUsd": 0.9203928980566656,
-        "feesCollectedUsd": 107.10558963084192,
-        "lastAction": null,
-        "at": 1788650146966
-      },
-      {
-        "symbol": "GRASS",
-        "band": "GRASS",
-        "pool": "0xf726e10ca81d42d05997c23df1d3f982c831b355d3a0723f830fdf433d893b36",
-        "protocol": "v4",
-        "capitalUsd": 6000,
-        "mode": "two-sided",
-        "fee": 39999,
-        "stockIs0": true,
-        "quoteSymbol": "USDG",
-        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 6000,
-        "hooked": false,
-        "position": {
-          "tokenId": "1882067",
-          "lowerUsd": 0.005476237543242361,
-          "upperUsd": 0.012684443079892324,
-          "depositUsd": 2700,
-          "depositQty": 317313.8830412519,
-          "depositStockCostUsd": 2953.851985237358,
-          "depositQuoteQty": 0,
-          "stockQty": 58156.4215376573,
-          "cashUsd": 5261.3145270533205,
-          "quoteQty": 5261.3145270533205,
-          "valueUsd": 5936.222432659597,
-          "feesUnclaimedUsd": 6.462053746452456,
-          "feesCollectedUsd": 2993.6100377610114,
-          "inRange": true,
-          "openedAt": 1788596195489,
-          "txHash": "0xa9fa472ce3f87b4a1f53d7de8b3b62787cd1a4d9867410df310fced04270cb45"
-        },
-        "spotUsd": 0.011673936766853223,
-        "refUsd": 0.011605045285829044,
-        "feesCollectedUsd": 2993.6100377610114,
-        "lastAction": null,
-        "at": 1788650147637
-      },
-      {
-        "symbol": "DUST",
-        "band": "DUST",
-        "pool": "0xe4a994f090844198d1fe5da6386195231a62514e430f129d1a439b49403aea2e",
-        "protocol": "v4",
-        "capitalUsd": 10000,
-        "mode": "two-sided",
-        "fee": 50000,
-        "stockIs0": false,
-        "quoteSymbol": "USDG",
-        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 6000,
-        "hooked": false,
-        "position": {
-          "tokenId": "1949642",
-          "lowerUsd": 0.0005715126152419777,
-          "upperUsd": 0.0014056309559150014,
-          "depositUsd": 4498.147507,
-          "depositQty": 4983147.7809687,
-          "depositStockCostUsd": 5224.234850714932,
-          "depositQuoteQty": 0,
-          "stockQty": 9018831.943046203,
-          "cashUsd": 1382.7253614297433,
-          "quoteQty": 1382.7253614297433,
-          "valueUsd": 7344.556549023837,
-          "feesUnclaimedUsd": 36.452428602115546,
-          "feesCollectedUsd": 1116.3143342287615,
-          "inRange": true,
-          "openedAt": 1788641157777,
-          "txHash": "0x9c83ab3803ee4c1aa8cdcd8aefbc87d982435971eb09f06af8b48f25357a0bae"
-        },
-        "spotUsd": 0.0006639419093029526,
-        "refUsd": 0.0006610424969932885,
-        "feesCollectedUsd": 6140.130548411153,
-        "lastAction": null,
-        "at": 1788650148500
-      },
-      {
-        "symbol": "LDX",
-        "band": "LDX",
-        "pool": "0x2ac316cc5ae07e6d0debc06c8ea59c44cc4e01191ecd392f4e47e6a9135a5c12",
-        "protocol": "v4",
-        "capitalUsd": 10000,
-        "mode": "two-sided",
-        "fee": 50000,
-        "stockIs0": false,
-        "quoteSymbol": "USDG",
-        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 6000,
-        "hooked": false,
-        "position": {
-          "tokenId": "1953933",
-          "lowerUsd": 0.0012404727171854628,
-          "upperUsd": 0.0028304940807556277,
-          "depositUsd": 4313.193108,
-          "depositQty": 2327208.6817683,
-          "depositStockCostUsd": 4509.143867788259,
-          "depositQuoteQty": 0,
-          "stockQty": 4645412.822159398,
-          "cashUsd": 659.4926419180676,
-          "quoteQty": 659.4926419180676,
-          "valueUsd": 6753.807167446863,
-          "feesUnclaimedUsd": 30.680229718896385,
-          "feesCollectedUsd": 723.079400417152,
-          "inRange": true,
-          "openedAt": 1788644917927,
-          "txHash": "0xc8a3c5b4d836ed1e40c1d119780697614861d73cc14e269bdacd72cdde863387"
-        },
-        "spotUsd": 0.0013283884329809957,
-        "refUsd": 0.001311899449809475,
-        "feesCollectedUsd": 766.3718104171519,
-        "lastAction": null,
-        "at": 1788650149556
-      },
-      {
-        "symbol": "CATSTRO",
-        "band": "CATSTRO",
-        "pool": "0x0f04fcb8225d70137b16e3145255a93a7565f2c9e0c8307958ef71220a44d385",
-        "protocol": "v4",
-        "capitalUsd": 2000,
-        "mode": "under",
-        "fee": 70000,
-        "stockIs0": true,
-        "quoteSymbol": "USDG",
-        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 6000,
-        "hooked": false,
-        "position": null,
-        "spotUsd": 0.000491934848082592,
-        "refUsd": 0.00044218110309972465,
-        "feesCollectedUsd": 355.6872865478012,
-        "lastAction": "paused after a max-loss close until 2026-09-06T06:16Z",
-        "at": 1788650150483
-      },
-      {
-        "symbol": "NEST",
-        "band": "NEST@TWO",
-        "pool": "0x7686aca0b66bea34614a1a3b0b3ec158fe150b09934baa6398c98511d990e935",
-        "protocol": "v4",
-        "capitalUsd": 12000,
-        "mode": "two-sided",
-        "fee": 30000,
-        "stockIs0": false,
-        "quoteSymbol": "USDG",
-        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 6000,
-        "hooked": false,
-        "position": {
-          "tokenId": "1951186",
-          "lowerUsd": 0.0008698019641339316,
-          "upperUsd": 0.0020146959326937867,
-          "depositUsd": 5097.913021,
-          "depositQty": 4116545.8003404,
-          "depositStockCostUsd": 6279.639566062678,
-          "depositQuoteQty": 0,
-          "stockQty": 5629511.443543357,
-          "cashUsd": 3252.159107890577,
-          "quoteQty": 3252.159107890577,
-          "valueUsd": 9594.495128760338,
-          "feesUnclaimedUsd": 28.39970957493673,
-          "feesCollectedUsd": 689.092957042795,
-          "inRange": true,
-          "openedAt": 1788642433198,
-          "txHash": "0x6c19add3b3eda7c77bd757c296c90dc959d08813ab498d72679aa21bf6dc0835"
-        },
-        "spotUsd": 0.001138563882734398,
-        "refUsd": 0.0011266228134492848,
-        "feesCollectedUsd": 12574.155634125962,
-        "lastAction": null,
-        "at": 1788650151218
-      },
-      {
-        "symbol": "UNIPCS",
-        "band": "UNIPCS",
-        "pool": "0x7b261f6244bb469568783f6ba4b6042b9d62901490d5b8501aee0c7f4e7af052",
-        "protocol": "v4",
-        "capitalUsd": 2000,
-        "mode": "two-sided",
-        "fee": 50000,
-        "stockIs0": false,
-        "quoteSymbol": "USDG",
-        "quoteToken": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-        "maxLossBps": 6000,
-        "hooked": false,
-        "position": null,
-        "spotUsd": 2.9389568075855845e-27,
-        "refUsd": 0.001968487147011522,
-        "feesCollectedUsd": 162.68922509206075,
-        "lastAction": "waiting: pool price 0.0000 is 100% off the real price 0.0020; not placing until the pool is re-aligned",
-        "at": 1788650151571
+        "at": 1788810589938
       }
     ],
-    "feesCollectedUsd": 63418.749738553415,
-    "at": 1788650151572
+    "feesCollectedUsd": 149749.25599749645,
+    "at": 1788810602760
   }
 }
 ```
@@ -768,49 +482,58 @@ Snapshot of `GET https://www.arbitrageape.app/api/status` at this report generat
 
 ```json
 {
-  "generatedAt": "2026-09-05T23:15:53.723247+00:00",
-  "reportVersion": "v3-merged",
+  "generatedAt": "2026-09-07T19:59:11.859120+00:00",
+  "reportVersion": "v4-refresh",
   "pin": {
-    "block_number": 55498712,
-    "block_hash": "0x905feebb6faf85315a8f2697e121f538dcc28d4e58fd8e102d59dc3c4df65823",
-    "utc": "2026-09-05T23:03:40Z",
+    "block_number": 57099428,
+    "block_hash": "0x80e6ce7ba61459ef97604844b2c75a7123a183531275b0bb53fa1d5b2366f15c",
+    "utc": "2026-09-07T19:54:31Z",
     "chain_id": 4663
   },
-  "rounds": 164,
-  "onchainTxs": 561,
-  "multiTxRounds": 115,
-  "sumListUsd": 48633.682658,
+  "rounds": 253,
+  "onchainTxs": 978,
+  "multiTxRounds": 203,
+  "sumListUsd": 103355.870787,
   "status": {
     "mode": "live",
     "fund": "0x0feb08fcf34f5c0e270261bc79bafc0f8eb87f98",
     "feeToken": "0xe2dae1c072b9f66bed999873b94798b2152af7e1",
-    "distributedUsd": 48808.79344900001,
-    "realizedProfitUsd": 49116.8582435298,
-    "pendingProfitUsd": 308.06479452978965,
-    "usdgBalance": 18075.664799,
-    "ethBalance": "1.2677506289738811",
-    "lpPrincipalPnlUsd": -36962.94028217039
+    "distributedUsd": 103530.98157799993,
+    "realizedProfitUsd": 118747.92360513941,
+    "pendingProfitUsd": 846.9174463071977,
+    "usdgBalance": 60742.094358,
+    "ethBalance": "1.5927402518827611",
+    "lpPrincipalPnlUsd": -98817.34764841342,
+    "operatorPnlUsd": -3283.014486199645
   },
   "feeFlow": {
     "escrowUsd": 0,
-    "claimedUsd": 159395.3490740001,
-    "lastClaimAt": 1788648609645,
+    "claimedUsd": 227563.3077810002,
+    "lastClaimAt": 1788810491084,
     "phase": 2,
     "recipientIsVault": true,
-    "at": 1788650106324
+    "at": 1788810491288
   },
   "token": {
-    "priceUsd": 0.0017902589788860127,
-    "mcapUsd": 1790258.9788860127,
-    "supply": 1000000000,
-    "at": 1788650143393
+    "priceUsd": 0.003555004227908025,
+    "mcapUsd": 3495769.4038454993,
+    "supply": 983337622.049079,
+    "at": 1788810597501
+  },
+  "onchain_vault": {
+    "aa": 120307567.25533798,
+    "aa_pct_supply": 12.030756725533799,
+    "usdg": 60072.736679,
+    "eth": 1.592740251882761,
+    "owner": "0x12b46b7746af4a902fd55198f09ecfd8c4d42956",
+    "keeper": "0xdef933cfaeb2a2af516df1eaa2101b00b7f77af6"
   }
 }
 ```
 
 ## Appendix D — Full distribution history (embedded)
 
-All **164** payout rounds from `GET https://www.arbitrageape.app/api/distributions` at this report generation. Formerly a separate `distributions.json`. Each entry includes timestamp (`at`, ms), `totalUsd`, `holders`, cumulative realized, and `txHash` (comma-separated when a round spans multiple txs).
+All **253** payout rounds from `GET https://www.arbitrageape.app/api/distributions` at this report generation.
 
 ```json
 [
@@ -1961,18 +1684,639 @@ All **164** payout rounds from `GET https://www.arbitrageape.app/api/distributio
     "holders": 1041,
     "realizedCumUsd": 48810.60919808215,
     "txHash": "0x771125b47781c00a0ee2a47116c7f98abea7ac055f4983e9a13cd74b0eabec57,0x25cc4956afa06b9fe756840647b65da0de65180ef6a4dea045b32e17a2ae8f1c,0x5d25efd5aee6733fc5044f5dc77a1a0d51a63393a61b59135ccd2d4d2c9dc27f,0xe80d8502a0548c7bf63774dc0d596ecff454d3711a974f61085b87d62aebf91a,0xda6b5516eeb5381aafd24c7dc2c0b771bd0a4b0e3ba6c4a92bbab05bb9995b5a,0xada08da449d16ac1f1d5077dad62a5c5235d3469e94ddb856acde6948ccd2cd4"
+  },
+  {
+    "at": 1788650290806,
+    "totalUsd": 305.945811,
+    "holders": 845,
+    "realizedCumUsd": 49116.8582435298,
+    "txHash": "0xadbccafb988054f82268aaf16f589c31dee08a8563054c3286336acd2279d01e,0x2e2d2b89db0ccfc2f90d80da50f4cca2461da6de26454b5735046fff16639ca3,0xdfc0d55ef28b8b12347df5b5b833b8859a97ead9b87c80e7ece56355154c11b3,0x39908a7f78ce256370daee217364dff24ac76ed0501b383cf36a0c2045953f67,0x56abf3bbf5f27d548e1b14614cbf1245b94478bf0b01306be8ee645d2bf4ec83"
+  },
+  {
+    "at": 1788651783381,
+    "totalUsd": 303.766555,
+    "holders": 835,
+    "realizedCumUsd": 49420.58522790269,
+    "txHash": "0xd205b9cdf1f4d22ad382aa572a3ff2d72c767e12053436256519f88bc4c081ab,0xd65fbc7684e48d2517b69f78116ba426081176c78316acef1e73c26fd40eb471,0xb44b91d9729629ad099297467b808793f9400f1fa94be44cee6f605018f24562,0x536ab435cb0524bfdbe3572e314710c79dcf785eaeea3f431a08bbf2c75e87bc,0x63bac4ed9f7d0a412d4ebfd082705e851d44240a428db5d728c7b5a8d6c26f47"
+  },
+  {
+    "at": 1788652743978,
+    "totalUsd": 559.951258,
+    "holders": 949,
+    "realizedCumUsd": 49980.34464315575,
+    "txHash": "0x525c773dca5a1b7bad77452dafb9dbde7100cc7659beac993f63bbc68bcdbbaa,0xefde3edf44f163a7fea7874f98715716fe76f275ad8433ae836290b3eed2a606,0x64b7ebfad6a6dd9bc48bf4f3e9c6ffe505a08f2063749e4cd70730ca2bd394c5,0xbaf23e9e3c90b55614b2eceeabd9c853bc03e92cc92eb684789f0aa050977380,0x7c79bc5d50e7314e7636c5ca103ad7da52611e15a1107a1dc2d990a6b1174955"
+  },
+  {
+    "at": 1788653688220,
+    "totalUsd": 526.37366,
+    "holders": 940,
+    "realizedCumUsd": 50506.6610958001,
+    "txHash": "0xc0a0320d8835c6395bec01befdaf64e6c092009d56de545eb5f01669d20b489e,0x445abe3bbe212db677d9f84f617966fc9e39a1966d1b9b68db342cad1d852d8d,0x8680ef7f35251c6a73553e9611ee48ffcc74d48e4857d506ec0f3b7b21259ebf,0xdc0af3f1ab43963e59a21c7f166dd24a21dce2cd0aa2541a3abc2b00b1e75287,0x5d7c7469984ca5a509e65a6655f76c4b2f6c0c10fb87a3d57de0fb53d9bf5ec7"
+  },
+  {
+    "at": 1788654634862,
+    "totalUsd": 695.882737,
+    "holders": 985,
+    "realizedCumUsd": 51202.475178284614,
+    "txHash": "0x8f0fe7f5d89f4b5f50e59bdbec715b15710f08a08a3fe2e1d5f546040564723a,0x9c09a239c62e04e8a439e21c13c9540f14c7bb956cd45c39ed9272dfa8d54732,0xa993da846a96c12c3a7d41bf20624ba2389221685994a93c0044d7eaa7dd16c3,0xe331e447df328da821b06a5dcfea723bcbfffbabb94c4499dd7cd51101095f85,0x697a065605342ccfcf7e7bed6c050a133c800aa3dd310907710bb56f1e38c446"
+  },
+  {
+    "at": 1788655595470,
+    "totalUsd": 644.401211,
+    "holders": 961,
+    "realizedCumUsd": 51846.850767832744,
+    "txHash": "0xabe1a92096df122cf63ef4e281137a16830cce243c47117bf771a0a08f6db88a,0x40c48767195e9d88eb707dc9e30839951c5ba733e68198681b331c54cf80e110,0xb650d8f567ffd7120a5d06a9f0350633337387e9c7d98cb8153a3a506739d225,0x0eabce1a392d5341ad9a0b567bb5ec693466a505ec00b56a23e9fe53d90416d9,0x8a9bf5226a780a1c3010f11f4a9cbaa377468cc1c1c74440879f9ba244a2ffda"
+  },
+  {
+    "at": 1788656611418,
+    "totalUsd": 531.283725,
+    "holders": 928,
+    "realizedCumUsd": 52378.15416114238,
+    "txHash": "0x642b58032e6f947e3b353c40fb5c2391bcfbc40899776847ea315b8652ebfafc,0x76f640e9c9785bd916abeb79573176d693fcd003c72817921969c373360ea9ce,0x249cc9497e3ae02f57c79fe6f80a8e983a5858f176381e0447c06a96680d49e3,0xccf5c4d02e12f91a1355c045e94af0cdf2d9c811d94120c9d3591dc0669fb7e1,0xa517cf8e3f07940894f2c88333373572af028093a94c5b317a68587a0dd9993f"
+  },
+  {
+    "at": 1788657764386,
+    "totalUsd": 469.206941,
+    "holders": 899,
+    "realizedCumUsd": 52847.37439157964,
+    "txHash": "0x9f8d683d3c57d4a3181ca3af5a70b814b2032b6cd7c0ecb6c0daba19e41d5bd9,0xa83db96a72b09174417a402214519f5df15a73da7f731e2baef873218baaf293,0x01f9dc62b5308c5085a1def47edecfc17f513a5327cf73457c6b9dc3cfd96853,0xdfa80a9bd2df643f9f34bf490cf8755bd78785a97c28eb4029eaf4985c277ac5,0x49c609225e0dcdb0221b7fc37ed90a397f5fa3eb7d37abec65f6a85a56d978a9"
+  },
+  {
+    "at": 1788658692247,
+    "totalUsd": 1618.743848,
+    "holders": 1138,
+    "realizedCumUsd": 54494.39629083274,
+    "txHash": "0xa9c00df7a9721a335ec4f5c95775152d32ee71564ce1278a4a4590c75b827ef7,0xece1c8724208b9653f2e15617ad96d00bbbd18ccec5447e0370b2a96e2b12e59,0xee1bd6016cde3b2e459791a57b41347377888f1707277aa5090bc4190a07fcec,0xb45defe19d81abb010ec42cfa0de33bf9c1814d3554d2c60c74b48300039eb42,0xb72864a3c721e7eba911a92216cf28987a46df9431a0261b77f2ece80f04baa8,0x231be0df67494120ac06e9ced5376df6ffecf146ac8b3392d78c67a1141b40a9"
+  },
+  {
+    "at": 1788659648633,
+    "totalUsd": 469.915569,
+    "holders": 898,
+    "realizedCumUsd": 54935.98094546433,
+    "txHash": "0xc12d914b7c41d77b72c7d71f6d83919c2be051515aafda730c17a6631077e94e,0x11f9d2f39eb8de825e20b6f30210fc3550045783b8af2f946b0e02870de801e4,0xbcad4f29b20a2c196eaf9f4929ab898597bcbc25da0cf5780cba36f697260ee1,0x500b018e7e829b7df658c3eebd6d4b87fef2e1bec94f2b25ff3a98bfa3343e8b,0xd14b5aac42b88590f04b1b06d890aa46dcdf6de7f17d78770b3c9f2c59c702ea"
+  },
+  {
+    "at": 1788660686900,
+    "totalUsd": 411.383362,
+    "holders": 875,
+    "realizedCumUsd": 55347.40737776869,
+    "txHash": "0x2d0db61e11fbf89f9fb9647d933d3d0bb3e98fc38fc0a48a55b7f2e253ca962c,0x1b57f4dbeb4460d8d1fd3e4ea6eba4a402ab607410db48fab5e21ecd04a53074,0xfc0ec1df55f0f8806ea9404af7099733226346202c9333d0862de3acfa4cc2a5,0x0c152aeb4c541abf20c4bcfcc260e6d039c6597d5a49822a7bf315c0cb4e5550,0xa946db1729f2accb51818d8bb685504779b42540197a86608bde7050756bbdfd"
+  },
+  {
+    "at": 1788661630429,
+    "totalUsd": 335.622316,
+    "holders": 823,
+    "realizedCumUsd": 55683.09418436685,
+    "txHash": "0x1832cffc52effe04e7ca88de7bcd70832e6d7179e0283dad476ad79e65f1d6b0,0xcf5828f5af66c4ce221b30511457f4da5adaf317c070cdaa00ef8109c504b983,0xa5e33ce2334cac6376357fe1690382fe82125dc6e9441bb2b5e9c34643c127f3,0xf5605c91e4e70d0c32af631f82e64bed9f1f5ae60030d187ff4b179d07c4e70c,0x5c14c4ee4b56381fd92873058141fd602a3c34b724ea7969a45bff610424af70"
+  },
+  {
+    "at": 1788662950121,
+    "totalUsd": 330.067365,
+    "holders": 811,
+    "realizedCumUsd": 56013.11800725154,
+    "txHash": "0xc02448240c0ed0a3ba97e4dd2520d7e8d176b2e9f14c0a51eb05fd9850163e15,0xbcb8af39d9011d48bb6cc75ba681cca127a1e8e4f4ee6e26a9eb3336e010a7c0,0xe84355977cda5670a4d490a9bf8d283cda2cf16c0db1fbba8c498febb3f932e9,0x73ee24df4419e06d792cc23168df11db93e919d6c6b22451ea7b0e81dfadb169,0xd1471679870eebb518f25c26abc9a586f8be7086100d4b62082344d3e89f1e42"
+  },
+  {
+    "at": 1788663918166,
+    "totalUsd": 639.457466,
+    "holders": 937,
+    "realizedCumUsd": 56652.45824481128,
+    "txHash": "0xbab6f6a320529a2f2ab34b78b459bbe2bee0efc4d24d0f653bdd5247a0afbb1d,0xe2e0b0b1ebc3cf694c808e4c27a626e1efa0e51898d90dcfebcffb852722c46e,0xdef04765b3c08c307372ccff645a00f45aaf45c096df6b5e0d5e623f5352bc46,0x8c17cd52bc01cd129a38993cf3b8e981994e51fe0dd266d26cf82057665da11d,0xf58ee346855dbb0c3c420187f2e721fb9c0bf237d44ff71718425aaf24661c3f"
+  },
+  {
+    "at": 1788664846614,
+    "totalUsd": 356.058549,
+    "holders": 828,
+    "realizedCumUsd": 57008.60163734738,
+    "txHash": "0xede58f2ca2eab11a77d2581be712ebad34e1978aefaba78ccf83822b8b39bfdd,0xb57179a47ca51a955dd4f580f7c30f690cb7319fca538a6cb747618ba5c43bad,0xf2c91858255fc9d8812c57a564474dc2bc42334c373a9029cb8f68b3556a85e2,0x736c6535808269bf88b53b7b4b75f6eeeb8750c7242ce9cd65a1d175bd7d5a9c,0x34ace06cb7348ec1350045409598937ebaab70b2f6826a79fc15b4b7fdcb3d2c"
+  },
+  {
+    "at": 1788666461465,
+    "totalUsd": 354.56474,
+    "holders": 814,
+    "realizedCumUsd": 57363.15126217733,
+    "txHash": "0x3d496242f9253dfc43f0e261615736dc92b7e0ab74274d372efafeeeb7e2b02a,0x27990209cb08a54d6e71596496e4dbf080a32447fcec73fcb309dcff711f5f29,0xf1b98b377324f078c95b9423e740286a58358efb2b854f39fa2c55496374a808,0xc5521454b34a2dedb285640376ee0f9e513d3a52f3aa4e5eba54e5c41bca184e,0x4e68915304df06a0865ed7a47283af1168845fd63fccce2af6df57650ba7da1f"
+  },
+  {
+    "at": 1788667426371,
+    "totalUsd": 855.957145,
+    "holders": 969,
+    "realizedCumUsd": 58219.006393669595,
+    "txHash": "0x515d55af71a1b35738e49ba245b3d47119f3357221b968321f0b210b751afbbc,0x06ec372a39d7712c9356764fe4efe0fe62b19d720a37e64e00736a363f4535f5,0xee7158cfb057aeff5e8e9401b90c3df6e3a5d85731d55fc43d3f486cab31cb61,0x18e27288713844a10663eec9d724f2e08846150c112b03022b13e0c1cc471296,0xc8dbde9f62792494f204247b102c935ad0b09a9f6a41e70d537db38b741826fb"
+  },
+  {
+    "at": 1788668441534,
+    "totalUsd": 463.593133,
+    "holders": 864,
+    "realizedCumUsd": 58682.65129476009,
+    "txHash": "0x20f389f7810dd96172d541fd801373eb39cb93e23c7edcae200305f985ce6e4c,0xd8d66a0cb219bef2c3a76a74c0b36d3509a10b3ba219e587eefc94ca0509e1b1,0x3788f65359027017c50c138a2843c26793710fa73b273da7b8eaf553405337cd,0xb5f1f887d6f240c0b84972b9c92c84a7b0640964d4f15fd4c8f68b462253bd18,0xa43096d6aace3b4ef0ddda35b33a0454a89ceb6cdd7d647e9468859f225521bf"
+  },
+  {
+    "at": 1788669401859,
+    "totalUsd": 428.695816,
+    "holders": 852,
+    "realizedCumUsd": 59111.31145181175,
+    "txHash": "0x49d1e3ebab714075d1fed81846f76e5ff3810157c1fa25c01e5af20036533a58,0xc484833307001b4028a083de9c7acc42b3c400f4aa7c64409c84f0e54671fb45,0x21e2197eb40bddf3a1684e20ef7b8c17dbe31d6fdef791bf7995a00527638bbd,0x47430158abcdd3558ac87b2f5b28f16fe33b92cc62e2a60c10b1c8c80c6a42a1,0x7cfc2aa8581a6799b247a68db61d8b0d843d6e90b1c290c31e07b692d2b2d977"
+  },
+  {
+    "at": 1788671139365,
+    "totalUsd": 337.154853,
+    "holders": 797,
+    "realizedCumUsd": 59448.5015874613,
+    "txHash": "0x3e934f1801c13dc3db72045ffd8d04d60967166d36a7f449994e90165e918fc5,0xe942bba1f345ad5c1f8e6a8ef9de517022e197804e1859e58246be5dd59ca4e2,0x907d744f6a04a3840a243825c058f33fc7cceab286610d6a69491dc1837d399e,0x6d9f0a4b9bc8e85ed3e94b00897e7e0c133c0ac72ee845e5aca4006fdcd07159"
+  },
+  {
+    "at": 1788673119752,
+    "totalUsd": 329.455798,
+    "holders": 780,
+    "realizedCumUsd": 59777.93203875611,
+    "txHash": "0x751b4131610bd8f77c085075ce98b1e6d72ac89f1b73e3cca96fbe5041ffb96c,0xe715d9a94948e16b38191a1a5f0cbb03a891ff0e7165d95458be4a80c7b2c600,0x527c62c4905c2d0df3db53c46b0aca439b2629645719d8c1f551480602a9d847,0xfd007bdfa5fe22f72cd949f4045fbb20146e09c64e10ec6690b3efa0b6ca8c23"
+  },
+  {
+    "at": 1788675520004,
+    "totalUsd": 300.732434,
+    "holders": 749,
+    "realizedCumUsd": 60078.65987615247,
+    "txHash": "0xfcaeacff8d86727ba082aca58f3ca52f9fbb1944dbaf4112092514e81edc22c7,0x30dff75afb68c63ec50203dc6239e840d58c4bd56a9af11e20fec850ef89b70c,0xdc64221e35bcbcbcf9ad0b397cae20c8bbbec7547483332163abd2475f4ccd1d,0x6efa4af3e9e6076e02eae7eaa647e7754dba906017a94358da382533528a6046"
+  },
+  {
+    "at": 1788677368431,
+    "totalUsd": 302.104948,
+    "holders": 745,
+    "realizedCumUsd": 60380.758506636004,
+    "txHash": "0xcdc20e95d38a09ecdcf08f8a589e978285661ab9e492f5f2f85563cc5d8ac02d,0xc042ff5303ec6104e732c2e1523228e34a049d968139555aaabb714ee86decae,0xd51ccf427b03cdbb0d69eac4308e9239753278573f796d1cabab2b50c8ce4ccd,0xe0bf5be5f6e971a36a088e29fdb9c48b61f1687d54f749fcae7d72b9c3016b4f"
+  },
+  {
+    "at": 1788679342451,
+    "totalUsd": 410.995112,
+    "holders": 802,
+    "realizedCumUsd": 60791.701098727506,
+    "txHash": "0x32e864da6108ab32260739792b5f37408efbe397ea13f91dcecd950dfac80a85,0x196ff04c51aed503ac50a011e8e1527310fe9dae94e7ca9afb6f1b20b518ba66,0xe0a99752d3069322e1df224ecae1cfbadd7506b9dd27347eaf039198949ba9a0,0x07374262971d91033dba4541d0668211cd1b4031cf257ad566b7000822334e17,0x2bcf7d9c06a3e2b96503791ca15c8fb20c950bf33fd590156c2a25b19584cb8e"
+  },
+  {
+    "at": 1788681376642,
+    "totalUsd": 372.282024,
+    "holders": 785,
+    "realizedCumUsd": 61164.0038807275,
+    "txHash": "0x9a12c769e2acb1641ad3ff2b2b49d7ee21563f3a40e9c32084738a2944ef2eef,0xac28570ec556c1102414187e0f70a4dd04d3094da1b7ff7cbd3c30e9237a2599,0x54cfed6b3203bd90bd19f8a9f7aa4beb1235ecb335056788ba1bf556e229d544,0x33165bf444da1d0aa07863ae9f2235f00bb146f56e2552ebc822c1dc45d8d973"
+  },
+  {
+    "at": 1788687174395,
+    "totalUsd": 340.470046,
+    "holders": 771,
+    "realizedCumUsd": 61583.29887968814,
+    "txHash": "0x9ad98aca7bab18eee19112c3b8244bad363a606ee938eca1d9860fc29c969714,0x9aa682d9af12b292487aaf0ca6b831ddb94009894872f68620d9f87c000f053e,0xe78ee66e7dea1e8db99025a4eb4cc8f572b27bdcdc1023541003121c1148eee3,0x33ab67eb54c67e11d36434cf1822742a655ae472c080f1538069425c1f37ec4b"
+  },
+  {
+    "at": 1788692042596,
+    "totalUsd": 313.699091,
+    "holders": 753,
+    "realizedCumUsd": 62001.61324709243,
+    "txHash": "0xc38ed04b47e323a099d8363555a3b97244565d9ec711fac8fd34c83ce4ff6084,0x2e74cad0461c4c4422a3b45e8b3533648bf2a1a78db99c97f5b03e79c7c5182e,0x63bfcb4f0aaea9fc1f8bad83b1c31701259d7659595c28848bfed8ec42d7537b,0x80c45c6c1d93177aa01b024ce1040cd492a6b7eae8aa32dcdc179713f9b9669b"
+  },
+  {
+    "at": 1788700603318,
+    "totalUsd": 315.400103,
+    "holders": 722,
+    "realizedCumUsd": 62422.06971026169,
+    "txHash": "0x4e67c16df0fba9533b0ee805d5e35e8f2d8bc81c3915a4d36fa525cb7efb63f9,0x54cbf6be1d3ea770279b06960b396224f22cf7d70700d3ed9666c841c6d89981,0x304f727dd4e3688ed81bf6ba22c8af88bf21a45fa5633833b94f8071572cc3f8,0x1c242c07d15cbd2b4df15bc52ec2e9b4528c2471cee1d299ae145acf69838c8e"
+  },
+  {
+    "at": 1788711597946,
+    "totalUsd": 314.718589,
+    "holders": 679,
+    "realizedCumUsd": 62841.6076505216,
+    "txHash": "0xc6e0665ef99c5a77321ac1b016892f1bd0412c86bf203321b34af5e063fa8996,0x5eb25ee226e6cea4847a78a7393d8ff8da94f76780c9d42a5fd9907f5b4c7cdc,0x0917e6929d23f95d7b1bf5d88ebb2cb4ed858f48dd4867570a0ad6b4d47a2e3e,0x45a976a94127c82d2cdeadb73384dddea14abc8907af49404740f19c5e26518c"
+  },
+  {
+    "at": 1788721392680,
+    "totalUsd": 302.797491,
+    "holders": 660,
+    "realizedCumUsd": 63245.2783550688,
+    "txHash": "0x8965c3a9de08fc127ac58d522b0f3aa866a7da84113b7b2e830e4f69f3f0784f,0x5c95337bf4a4e62eb29c857eaf86f5aed336e8a442d1960daea596a854e226e4,0x4463b7949002662451176fd1286841dd845d65eb3a2df03cd4d5bb03baf6d110,0x2903c7bb8d89dfa82108d3e923bdd267a72251b5fbf9da0b117585b14963036d"
+  },
+  {
+    "at": 1788723113824,
+    "totalUsd": 369.733038,
+    "holders": 685,
+    "realizedCumUsd": 63738.21475035682,
+    "txHash": "0x958471c788426ead40da8f73612e87c8ba1487b94a70be39b07730e7d46f7760,0x2ae3c5087805a478dd587fad85c91130c8a9415049ed4c2c45d1563f0ce8e627,0xe5735ae36ba28cfe35224a687c5523bac4d51044b7a18ed977cc459b3e6b8396,0x39abd128592d59f3cd26b61efcb3479ea49b5dc3b8e9a2fc4eb29019a6cabf8e"
+  },
+  {
+    "at": 1788724046167,
+    "totalUsd": 419.671223,
+    "holders": 705,
+    "realizedCumUsd": 64297.70857460612,
+    "txHash": "0x348934e47175a70679aa4e25ba89f51d66e58298aa680172a632ebb5c4600d26,0x377f132352f9782bf94979e54354bed6413506b835a6d112647e5e6e432e022b,0x5ef0f8a158940e74c651281ba788e5ed06e3dc39f785d3bedcb327ae2c974d03,0xa372b27e557b9311972408adb9d61f364c431b744466d01e6a32d42b77aa1002"
+  },
+  {
+    "at": 1788724995647,
+    "totalUsd": 371.932521,
+    "holders": 691,
+    "realizedCumUsd": 64793.71490060612,
+    "txHash": "0xc648e8f54f237f2acf3541259eb536159ca14ae064c7821590288b351a62a000,0xdd09b1e4f74687286589b01e38a0a86300b6443cecfdaf5261699048d32260a3,0x534cd5cbd371dab7ad0acc41e7c4c006e40eedcc20b090d46058c585c805e481,0x3ba29535b88cf86ca415f641005f023de49b91c084f029874f4a3081ef4cdd1d"
+  },
+  {
+    "at": 1788726953538,
+    "totalUsd": 332.510303,
+    "holders": 672,
+    "realizedCumUsd": 65237.06770623791,
+    "txHash": "0x14ab81e14b2328c2c21e31c8bf3da847d635e18212c3bbb44bd1f99bfe881edd,0x02685c8a86cb3bc745deb5635998212c314829ceedef8ee374cc7dd50a4b031a,0x59cfd5ff2c5bc1ab62516a9c92eaceccf311697a313d0717f4f3f7322952050c,0xfddb69be76d58a8b9e191f1a7c07692e6c9a60d64d57ee315d6c2137e83d5e2b"
+  },
+  {
+    "at": 1788729455120,
+    "totalUsd": 299.612388,
+    "holders": 655,
+    "realizedCumUsd": 65636.56272778953,
+    "txHash": "0xb8a2bfc002daaeb8c931e2dd178abcd02f37d7010033e8f662654a383ff79925,0x98bb6eaf5e0e52f70e788f4cc0213c889b90e7cf8afa32af69f5332101db9bcb,0x7381747e67c3674c0a1c3061df331186c234af6794f874a0ddebce4feb2166ad,0x1ab2138d6612554bd18a08d13528a2b3a8d96a9e4d570be20ab54d6ae4b1d556"
+  },
+  {
+    "at": 1788733513325,
+    "totalUsd": 607.713188,
+    "holders": 758,
+    "realizedCumUsd": 66446.68620578953,
+    "txHash": "0x556b50c3f2f3da4d0ee5111e4064ba07ce1fdb38b3be0791c3e64a78778e3121,0xacb9dad4e7f786d0130937d259347434839f342b184549a2be51f73b4ea87271,0xca82cb38b45de00dbf440375ccbe4c42bcc727c5e3167f97c4ff0a27a4a53bb3,0xf78c0ef5796e85a309fb1a9bda9e686e4f5909918a3f96855144ec1ebe3536f0"
+  },
+  {
+    "at": 1788734483842,
+    "totalUsd": 1547.534144,
+    "holders": 887,
+    "realizedCumUsd": 68544.27018534658,
+    "txHash": "0x6626352500d2f56e3ba5e97c9e0d0b4eb964e2c0f87f8e6b3dbd9f5033aa9813,0x04c6d5a14a46099018e130316eb8268b0c8d25d7c6c824f806c0f8a3311a04f0,0xbb998e14ad4ecce3ba5a0159fe630b0ef14d4b395ec2a08db927f77f6c266838,0x08f40e08358522c449db099f8192a38ea4b26979def3086144f8cef113b815a7,0xcb2f354e6af72f6ed3eb15d2e505020d7a926377a4a03558e8462dea15d4ef45"
+  },
+  {
+    "at": 1788735436895,
+    "totalUsd": 1393.860343,
+    "holders": 879,
+    "realizedCumUsd": 70489.14352934659,
+    "txHash": "0x62997fca0b567b101a85ea2f35ffb6ff9ee374c076219a595d86b78c59388983,0xe554384d8d65ced2aad902813acc136bf2f94d097393fc8260399f2de9f0bdc3,0xbe6a079417e2c7225f3d3d494052d249b0246a8b2ee94bdf1b9bffbfadeb9fe4,0x148ac78d119831859057489406b3b1147c3ce753d32093600f8b97c52cd231ec,0x5efcffb434277690c26651313d63e4b26740378b17ad4ef15c6dcf077271a2a0"
+  },
+  {
+    "at": 1788736412638,
+    "totalUsd": 986.933005,
+    "holders": 821,
+    "realizedCumUsd": 71684.5018203466,
+    "txHash": "0xd4cc9c6aff3973116d35e3f70f89d056c652c492b131eba0764e59be81832f08,0xd2c25889a7f289dd0cad9099a84cec7a4ddf537efde7d49699eb4598ef5d1042,0x35f9c461c29a2ec14e8b4090485eebf74f64e3a55b8c5fa58beb1dfee937f8cb,0x2429b3a3d0c5ad0a6577807ff8dc0b7e1fdf216ab56e477c6f037f2130cd4f18,0x906d990abe504b7e93a0cd968fde97390ed885c7200d67e3605c21d1387ec200"
+  },
+  {
+    "at": 1788737363350,
+    "totalUsd": 871.734999,
+    "holders": 804,
+    "realizedCumUsd": 72846.82203734662,
+    "txHash": "0xb4935fc44c27de49362ab8b6b3045cef420f3b6bc85d16a7c09c81570622fecd,0x1238f04adb5575f11eb67e278cf167ea92daa7391ab74123e4d73c6ada6fa563,0xbdf018a34422b5474dc9f0232c0a9b92c88f890fcdc3600db47142b06c409b56,0x5c352964d922517c2aff3dafbd9d460fb007d34cb965b743c460c4a80100858b,0x0c167a4939b8305e8328e6af1c316c3d35ee913780000dffb0d17e6f53033738"
+  },
+  {
+    "at": 1788738306588,
+    "totalUsd": 1063.521588,
+    "holders": 835,
+    "realizedCumUsd": 74264.84148881039,
+    "txHash": "0xaa8071500cf049a719f98489ddfda4064281df26e1a832c83ede68d73cb9e18b,0xd586d39f69b5a481df9717baeef61a7fc177bc20061e3e441a0e87d87231aaa8,0x97db8bd7f7d5442f5a148b773ab9a4505bea3078fba9994a7625f5e3c4b1f5b1,0x12a3b430be91f73b022e4ded4c1f60a45613abe4cbd082527322dc6325a71d8a,0x9273e12bd92c97493100d0bbb682b064265cf818783175fe376a1f85bdb89617"
+  },
+  {
+    "at": 1788739271746,
+    "totalUsd": 1178.002439,
+    "holders": 859,
+    "realizedCumUsd": 75835.44319754712,
+    "txHash": "0xede9bf98608beffa410677193719a5c0a57516db123152adfe5d9127ec21671d,0xed673c386ee717fdedb8071904eec54869b9d5f3fddb42c7457cc97e3ceb12d7,0x2ee11fe04daacd4257b6a45b14ffe9fc9368d0ed8af2085a8ce3b4237f0cf633,0xacb6b1c614d75aa4bbfb5625666500e497104222909280368c3578abc044f5c5,0xa0fdaaf35eceb7c0aaba4ec3f6d4645db25ef5bd0eee7fd18517672948961733"
+  },
+  {
+    "at": 1788740238706,
+    "totalUsd": 2336.521587,
+    "holders": 1062,
+    "realizedCumUsd": 79224.8883177447,
+    "txHash": "0x53379bfc725249e023ac22992aee1c54ce961841bf0f96dba6050376b871160d,0xead5588f77f6049e66d5fa645363512097df4f7f6034479a194eb21238750e80,0x73a958e7cf17b743d5c4793422c4bf41f469f2d673911086e270bf2b95f8d9c8,0x7de5eab82a75a7ad1918dec397f2725a5563c28a7633c75876a4aaac0d91f75c,0xd453499e27ab5bc7c37dbb8241a5e770b24171fde8e6a1248e2418d9c0b6f080,0xfe7734d0c64a776b8d52b563edb2d453d94e7def9d6f2bc4158ab32a8beeecc6"
+  },
+  {
+    "at": 1788741165665,
+    "totalUsd": 1784.813807,
+    "holders": 1118,
+    "realizedCumUsd": 81331.16381174469,
+    "txHash": "0x7e2519cf71da7f8740bf794c08f2344879b63d77bc352db3e34bb610b9a203a2,0xc258e2391a443b6c49172b5eb5113ea7b3a74d6c69498d1cc14bcfdc5ab9b905,0x96b3d7c16a4f66ef0cb9dfe04b80a9f2c8c003a54163fe36df93f32fc667ac32,0x79e8b9531e7ee38e945f6cf07e76f4bd34b5fa35bcfd42d7f9e51178d87fd6f1,0x6730be526cd406578eedb46fe98ad7da4f8dab7c9803d8ebf53de48681679f15,0xda2e41359d574c84150b6e35302c9538c9c9f9b91122da8430792ea1a7cd2098"
+  },
+  {
+    "at": 1788742103212,
+    "totalUsd": 713.426806,
+    "holders": 920,
+    "realizedCumUsd": 82282.7300335049,
+    "txHash": "0xca690ade45021f7a98bc88bb53a6ae6e5cc00ef7cb5aecc36ddc3f2d5b7fe5e2,0x8522f69898826ab5962a310cc1f4bc348d213eaccaeb6d61da024982c414a50f,0x9788d37f497b6f59a1bdab11bdd863b42d0f7a1d84ea02cb86c3c456ca72e68c,0xfcaf62454e01526f521ae4b91d9e0b4adf877a742aaad7561c442bd2f0f4329c,0xdc30551c683182bdeae849c6406796e980a9c35bed89369274679079b21f1c5c"
+  },
+  {
+    "at": 1788743027912,
+    "totalUsd": 812.677579,
+    "holders": 945,
+    "realizedCumUsd": 83368.40386340057,
+    "txHash": "0xfb129675f56e7def24bbdb90499de5ad3ceea94bcabc6238f23a1e9a0a63170b,0xd59e0ef468422d078c2d3e808bacd8fc62c7f4fce5f3c541148e52fda012170d,0x3815c4d2979f5a679ebea70f03d62fdffe4616f677e8fd68115e6967fcd76812,0x220bba37aa550a224175e807972fa8a542286eac9e943e4cf260bfa20fd8123f,0xd1f57d707e778efca3c2c1795d7151613b55e92fad0c66c62a549ab36c138a05"
+  },
+  {
+    "at": 1788743972840,
+    "totalUsd": 566.593077,
+    "holders": 899,
+    "realizedCumUsd": 84121.71579040056,
+    "txHash": "0x7be337dcd4f997490e764ee13ac5fd66c90eb84b30c88a30734905d9f5a570fd,0xc2cca6b862aa1ee6c4a77e7053182c36cc0e95e2e8a0caea0b67104d636b285a,0xd37ff07e62eeea82de8676582fd4fe531fbcd9ff10e730c75235faebef36fde8,0xa840d92b57d28109453071a117ad7e0ab6b02c46ac6b9770b83e4b73538891cf,0x3743b77a8a9dd8b4dc453140701608168b92658a406d38e01a00fe167972d343"
+  },
+  {
+    "at": 1788744930714,
+    "totalUsd": 622.867909,
+    "holders": 922,
+    "realizedCumUsd": 84952.20284343405,
+    "txHash": "0x062bf48222d9b3258ae28483dbe3ccfb258f876e3133bf55c5c1709e1c209a75,0xb9b04c035f92c8896ef98b796fec63919683b62aa462e427bc1ca08ebb6f5c49,0xd453af8f4b185e9f729a01eba640d36a9d880fa246717e0aa9ad0966c6987806,0xf36a4feedd7f8665f9b45b56d00372df2e1a751cf0d6b24981beb74b399aaaf4,0x31bb72baf4426b6d8bccc935f1dfaeea3b8b436aabb5bfec27ff494b4ab2178e"
+  },
+  {
+    "at": 1788745953494,
+    "totalUsd": 841.523464,
+    "holders": 971,
+    "realizedCumUsd": 86074.33980943402,
+    "txHash": "0x3083bdf06a25e677c369bb2b7dab4b3729f964f43546f0c01755283d5bdeebb0,0x77e7b52d76781924540db6725fa988f4086a14cdc6495861cfa43f4d8e3b4983,0x8f337c1edb932b8a165d3482cbc92356033c076133c397b4f81bcd23c1be0481,0xb189c8802af771b8fa6b6eb3f12daff58a0265d8399dc242c1f5afda87da751b,0x5a2c68eb675e78c70b9ead8f7932c7a9ba051e4df3ff3b751d183880eb5ddd53"
+  },
+  {
+    "at": 1788746913428,
+    "totalUsd": 3929.985415,
+    "holders": 1316,
+    "realizedCumUsd": 91333.0274927558,
+    "txHash": "0x2115a94c9ce2c4942560dc89a005ae5263641cbbcd24102895cb52692c6148cf,0x38df162460ac2643bd8369beaee599123828b56505d608c01c7f3a4d255ffa86,0xc7585ad1c02d20a42c20ff07584692c72c0775461369c9e9caca4c84935d1bdb,0x93df3b49867549c6c70c20dc162d377eb9a74326461125caac9f7b42672d57b6,0x80d830b10ff37d3ac9261ccd6ecbdc19fd8815cc75d130d294fb473d240f7876,0x514ad73d931ae9bfab7b7f078ba46551e74899d9c9f6966bfcc35fa1a6cd6136,0x853203e94ac3f4d07c5889b3fb2204774deea1ff65360a483287dffe931c6c87"
+  },
+  {
+    "at": 1788747866696,
+    "totalUsd": 2126.424669,
+    "holders": 1188,
+    "realizedCumUsd": 94149.05624493706,
+    "txHash": "0x22d8975389a71f71979563b96a60bb023345b86f792c0ef5147a235217ecc2c1,0xdcfb907d3445bec4b0c0e0729839c04b854a199d5a429696eb337e48406387f4,0x8f6d9e3ec2feae4b4c78373d586d277c958601671f70df88ef685c1fe182f67c,0x903f3017a09ce90185c299be6e71eac0c6f6ae04498456a211efed1207eeefe3,0x32c485cff079c1efa4dd1f88217973f7ec9204f0e6d3884799277f726391bfbb,0xc6062f6e898b8b33454730db5cea98d49e8223de38af160ea833d9edd1b91942"
+  },
+  {
+    "at": 1788748816356,
+    "totalUsd": 754.459674,
+    "holders": 961,
+    "realizedCumUsd": 95155.3739519371,
+    "txHash": "0x2aacb42d4b1b5f67ee05779b5b47512cbe81ab05783c6602fc02be822cb85b89,0x7621110c74d8c4e27e05d35eeaee8fc7d549ec31fee095a1ffa8c1f398a3d4a2,0xc251dc23ba4bc59ac5220aaf1ad837ccbaa55917a033695b7b066a6ef096f92d,0x195737bdc8b92544de4c34cc3c467fbb5ae116c0687bcd7d3ad20daa58ef20ff,0xac483b62f480e6ad9d8fa1b0e51557213a347cc9e8f5f1099454133319ded995"
+  },
+  {
+    "at": 1788749751296,
+    "totalUsd": 968.26821,
+    "holders": 1006,
+    "realizedCumUsd": 96790.05420210201,
+    "txHash": "0x9bf1dcc297fd2cd388a269b169ed58f9f1b0130166fbc80229e034603b9d24df,0xef61eb14ad9149fe8e9d2da80f7c7e66f6883250278c46221a5375769f660aac,0x3260fd79054a078315ad2cc808bdf21e3521f020f0be908fdfb44d6b02d4d588,0xef51e5d6818cd9b9b9464535a64f44ffd58940509ea700787ad0aee55b1ab85f,0xf466f0ec940525f955df67f0b750077110a3c70c16baa779ab96d76af3248af7,0xd6b61620ac308b8e2bb35f51ce5efaa3a3384f65fcd6b8165f247a47b73e69c7"
+  },
+  {
+    "at": 1788750706435,
+    "totalUsd": 1164.846148,
+    "holders": 1051,
+    "realizedCumUsd": 97999.55772710203,
+    "txHash": "0x8253daca19e878b04c800bc7c5aac1a98384b78dd3418e3b29a5a139a1cd79ec,0x831d7aa99a3e1d26cfb85a51004062fd64ec158d67a5f5b52e77ae8184a434a6,0x5c16d98691c86bb3411df288dcee62e2e647dedfe94d93dae671da3ba74c9b2a,0x92a3c871d6a330978c4b2d705ed2b38b9b9166ef03ef8e7906083227fea53a8d,0xaf760c0c80796c16ac3357e4debe14b5730b45230a4c1cb32ed80ee0004e2d82,0x59298a96a4ccf3c70b2f454dd97154a98a54bc05cce94970e49b28a11083dcfe"
+  },
+  {
+    "at": 1788751681416,
+    "totalUsd": 760.517144,
+    "holders": 966,
+    "realizedCumUsd": 99013.46917169624,
+    "txHash": "0x5355e331e7b6e9641d1e1600efa36795d69c0d0b53c03d7e3d9f2b7f7d30a5bd,0xbf28f513474eb4e2eb90d49d91cb2d2c4f1c5d2a666f3256a2a20c90a4a79cb2,0xf52ff462e2834798a38cea9a89df53169ce90b345b1cf8e495eb5b5136ea338e,0x8fd26990208ce60d4a0fb5a5fd202a9c0e43b3db5e8817617ceeae00b1cd0327,0xded5ba7b55bd22a6aadcc1c549976e8577af2302ab015fa9df7a5bf736f3b82b"
+  },
+  {
+    "at": 1788752618169,
+    "totalUsd": 425.372079,
+    "holders": 200,
+    "realizedCumUsd": 99652.53643069627,
+    "txHash": "0x4e2f9362d8cb4bcdaf9b51d834e0d0266e39c71e9ebd37b6953117f33b73b1d7"
+  },
+  {
+    "at": 1788753564392,
+    "totalUsd": 512.923904,
+    "holders": 906,
+    "realizedCumUsd": 100264.56735969629,
+    "txHash": "0xa4556c03035a82ec299c7cf5972e86470ffa7f8408d2af936ac5da16fc744e32,0xf03d428e8a42a91bf0ff97e10174dc247961b47e2a12792023d3e058656010b6,0x7de58ae6e5fbc92cd58484fb27d677bb65a45b0dfa74274708d296badf027093,0x8cd4a5f788a56d2dcc0a97d0cd8c80fd33214d04240b80e89118663d7cefea05,0x357dd00346180c44cd008ea3c515e5f4785d82aced7bb0b30e013449ea4dabad"
+  },
+  {
+    "at": 1788754822288,
+    "totalUsd": 405.455125,
+    "holders": 849,
+    "realizedCumUsd": 100805.3521696963,
+    "txHash": "0x142138673d5baa86d2bdf2827b985cecc56f53b7ee7685a6929c1a40b6eb0e71,0xf578732ab41a7f759a68495ef84afb6d9227921df12919e5826bc6149693e81d,0xaa17e5a811168f16cd6e6f63a6476c924c0eee7824821f67891ce59f88b22cc2,0x4a6cdb0c2b3eab0c4af1e19a35708acc0d803199cb59cccebe7ae73e7532e5b8,0x379ccd077dd91c3dadacfcd2075766977490feee9e5398a334620737a20dc4da"
+  },
+  {
+    "at": 1788755935364,
+    "totalUsd": 333.58917,
+    "holders": 793,
+    "realizedCumUsd": 101250.26641869628,
+    "txHash": "0xfaf2304e082cedcb3729f391028085db1868e15e27f758ee8764b9cccc831ef4,0x8c94f3d88da277f7cced910628b887ef79711ea9cfa6308983ecc4f69d8d4457,0x06f9c2a0998fa3fd25c8c3b4f1452c57f7d16578ba446f6e1b1e8094d62aa6a3,0x9c9be9df4f55c155bb738ac0e359b2d8598998dd837736507d1b74acd82bd7fb"
+  },
+  {
+    "at": 1788757129413,
+    "totalUsd": 341.830672,
+    "holders": 793,
+    "realizedCumUsd": 101757.64173080534,
+    "txHash": "0xaa036f63a440300400709a1b536d047267273d3f599e14887c0b1f9fbf0c4cf1,0x1fd7d41689103955937c833f2f6f9e6a918f1e0aa921b6c263e09bc92bcea887,0x58670e23375d9f2647af3d735722cddbb7babcddc0eb5d11bab5014b876fb6f1,0x3f657a7b1d59e4e716de9d2c85043270e49b380c5c3231d374426d7eb0f5e64a"
+  },
+  {
+    "at": 1788758061024,
+    "totalUsd": 588.212225,
+    "holders": 916,
+    "realizedCumUsd": 102490.01431765247,
+    "txHash": "0x6a11b132070da176aa846cdc600dd8662c995b7b4c600163cf38e714a76899c5,0x118ff6be826a5ca0fb4193db35247de3f8a57fdf0a6288275fc6dfebb0a7c54e,0x913d94fa4710b176d85b4ba5318730da8c03dbbd3a410ee98b2e30e5798b29a2,0x45119f518c25eee5164387143945652434c81c822cb7b79594ab6fae2d620ffe,0x9d84ead49861e396922f6b7d72f37ba88aa8b80dcc204e9c35e4977fce6c7f57"
+  },
+  {
+    "at": 1788759004160,
+    "totalUsd": 652.047372,
+    "holders": 946,
+    "realizedCumUsd": 103359.29639322626,
+    "txHash": "0x1b894c5af742575af42de535ec0d9a2f5911220d6dfa418e2ad99774b19f381d,0x6f606573b8f5488f72bfbe302685fe8ee46dd7dd6250356064ed747ff44dad80,0x904cee9ea902207d71c5566b69c409013fd4b7dfade734342b68abc29567ec59,0x93472cf4f39b3e85de7fccd76a56d8b7fbd588434d8b5635234f841c2c2b15ac,0x88aff1655b3ea1bff61173ae026b0d718433c2560012936a86e695ad2f95a729"
+  },
+  {
+    "at": 1788759932656,
+    "totalUsd": 326.011595,
+    "holders": 781,
+    "realizedCumUsd": 103794.42027324853,
+    "txHash": "0xb2608c3db14f67a534d5c0cd9f3fa45a612d703260a94f27deefcabce603a228,0x6ef480798dad59e123ad2df3d8ce4a13d3ed91d550f295d19a9bf793786aedaf,0x1ecb504298d63c53ba37714a7d687dbab3e1ee188035ba0503ae2b6528381aa5,0xfd40d7ab7143d2c85f7a40a426e65e698bc483f32b03630d6f0ead9661b2ec6d"
+  },
+  {
+    "at": 1788760852552,
+    "totalUsd": 344.152507,
+    "holders": 797,
+    "realizedCumUsd": 104253.25757455727,
+    "txHash": "0xa0259456757d26d5c78aac690d3dccc460e9456d2aed131b8ca9cf2bdd4dfb87,0x8189659185a78d9670519e9d3003e703ca5f1d74728b8bdf81a4b2351854629e,0xf28487b85e7a360c9dfd3e8864d5bdb21899473e2f95e8536146e1522170a36c,0x23105052023bab74f21c3c36f7eafc620b8fe09992a51ef5f8d8b8a09e692f89"
+  },
+  {
+    "at": 1788761779538,
+    "totalUsd": 638.27203,
+    "holders": 948,
+    "realizedCumUsd": 105103.86316082475,
+    "txHash": "0xb565daeda6eaae99906246993b2f090bfb5f09c228027034fc76d80c4647c2cc,0xff4efad35c5215dfa0e692efcacda5cebc0b35396ca79d0c45ed5548222119fb,0x9a9d882f456b001adddbe75313c576cca81ba1496162d1126157f483a2bf1084,0xbf53590687aae610a1fc29e31adad7c1f1a420ccae8ed569cfeab9b50dd20062,0x62b87d32116fd4eddf275fe65ffca2121dd9cd90027249b2827c66ce6354f30e"
+  },
+  {
+    "at": 1788762854619,
+    "totalUsd": 314.782301,
+    "holders": 776,
+    "realizedCumUsd": 105617.42913382476,
+    "txHash": "0xb5e0aee853123b871864440cb804c54314aff419d2c423bd1e9b48a6301a422f,0x3c7192a3a0b2002441b36702added12affc41c9ba468546222537276f2df33e9,0xc2c7ae0c91f04ff397f68d0eca68c0776c177120cd1d886f1938fc07268795be,0xd8c7f94c73449996d0c735d6713a9404b09e3790140213f243e90a877a2fa68b"
+  },
+  {
+    "at": 1788763814444,
+    "totalUsd": 473.786612,
+    "holders": 886,
+    "realizedCumUsd": 106155.41535997753,
+    "txHash": "0x3a98690c873e5df4e8de42027cdb9fa3b436fb6f38c454ec9040cbbe7b40b9ce,0xb252098ba3815f9817a4156d8fcd45d2f8f66804e248543adc7b91dfa56a1a28,0x264ce87ba678d1f84a407ca80ad91b3e20cebdcaabf55d7629905686d5fa6346,0x3b34ec7d6e51651634e39bd303a66fc359d6cc65bfd8592531037b44a6944fb7,0x27cc809a057da6224b836609a617c9442ef242608a4516ed7a24e7bdd11fed46"
+  },
+  {
+    "at": 1788764773498,
+    "totalUsd": 354.838193,
+    "holders": 808,
+    "realizedCumUsd": 106628.75375897753,
+    "txHash": "0xdff9f12da87fea646499b741b8790bff9c1ac66c8bf3877d2d5bab80e0ac4002,0xde6e961f45d3e8f6e4063c50aad4b343b5c947b22ad3361f250494fdfc7ccbea,0xa158ea9753013dc4cf7f972ccfe6ec06cfe16acb6a90aa3bbf7e6017b35014ab,0xcf9b8427dce398f8cb84a85266ec15a19695020f46b603dcb14bdc684b0d6502,0xca202c4f84859e11f1bb13be05d1cf6298677847ad3922145d65c39765d1636a"
+  },
+  {
+    "at": 1788767587519,
+    "totalUsd": 310.345408,
+    "holders": 785,
+    "realizedCumUsd": 107042.55935497752,
+    "txHash": "0xde6a1483825fdcef59c8560b73bb5661b3a3ea96ee5eb146e71940ebd08a0b60,0x7cb325a4dfd8e9ac90ffb582f6e6eab4264dfd4e7f9820d0dafb3944edd2fc40,0x032acc66185dcd61575825479d0edf432dcc235e3e3af879185726b7bc636c6e,0x64c0e730c460e85ec9dce27e936577266e18d3e972c6099b6bbcbad652a30c3b"
+  },
+  {
+    "at": 1788775568301,
+    "totalUsd": 343.432707,
+    "holders": 809,
+    "realizedCumUsd": 107500.45524497751,
+    "txHash": "0xf4337ada79d57fbcf7e6655f019ecc3aa6db8fffb7084eb4a9138508fc819cf1,0x7a731fac822947ac3ed77782d6123b116cfad0bf3d1007d129479d5b8cd1500c,0x71d3fd6ba3ed4eaf02e78216a1b7d0cd38326a556a7e807106aee53588e2b08c,0x52474f2067276c7e397f7a2fd934cf8dc37955a208c73b2b5b82b6b04a95fa18,0x1057346cf432bc5cf30c5afc982027aaf2f4f8208206b245c044541ceb4a6239"
+  },
+  {
+    "at": 1788781682201,
+    "totalUsd": 306.901997,
+    "holders": 778,
+    "realizedCumUsd": 107909.62315404677,
+    "txHash": "0x0891e68ef15715b9e3b30487ad5bc1c697c0f4397b3c4037827f4162d42fefef,0x701777225c0b420a9b4194c99369d6d5f0c1033873b56b398a428372d3fa3ac8,0x0f54461cb894fcf6e400d66cc6b82b1feaabf4d071d3d93fd66fc0dca2e0e967,0x3f2178f40add1ada6911cc467c1a8bd17176eb748dce78b6bda28a7da4274a91"
+  },
+  {
+    "at": 1788787632010,
+    "totalUsd": 329.694624,
+    "holders": 793,
+    "realizedCumUsd": 108373.02531289344,
+    "txHash": "0xe2d7d6c8ebd4917c0b49868b20ace23544bae50ae43b6c61a822d4a19c5e847d,0xd5dab972fe7df8fac09267cc58ec9c09a68d95de8e5068c6c71baa2aefb5c4a3,0x8d7b8a70a86e8cf52ad7667ce9a170fe7a100007a55637e8b38a0e5da16a693a,0x8b6cdb0e141f9857d8c5f6cbfd2d4fe65f7b05a23ea1bdc5c2da2e1f49a0e51d"
+  },
+  {
+    "at": 1788789071181,
+    "totalUsd": 358.511623,
+    "holders": 812,
+    "realizedCumUsd": 108827.27370630718,
+    "txHash": "0x599ead8e62dc9be1995ddb359688e461d1352be6e5f6b8749e8cbd2febbb9c2d,0xf057b8a9dfc3e27388bb6ce59b05d16c11fb5131525383ad7530ede1cfcb8408,0xd09399593cf81e4ec3d994e4d9c57d4091d4cf4dab0824474f4e256a5e05c8a7,0x7811b963a4753512d0113fc62d5f5bb759370fa308e8e1d1f44b33811ce7d76c,0x57ae63ef3b1798b59f988adecc15dfc9a5d0d6d61d2a65fc816dbcf4661916de"
+  },
+  {
+    "at": 1788790328177,
+    "totalUsd": 303.977466,
+    "holders": 773,
+    "realizedCumUsd": 109232.60605372285,
+    "txHash": "0x075b4a8da453a67bbbde7e695eb35e61fbb6e65f1a1515dd7ee22400a82d4b34,0x089b5af56c58023f47521e83f39130c6d1bc82e953ab338c54a46f7344161aee,0xf95933d2f418b4586807ab73bac513f38fbd4cf2bf12d12e9629236b33cb49aa,0x9d4d5035939eea7a6fcf45d0df7bc12fdfcee6d90ae4f3eef6e33621f4b53916"
+  },
+  {
+    "at": 1788793153919,
+    "totalUsd": 357.110489,
+    "holders": 802,
+    "realizedCumUsd": 109708.65648672284,
+    "txHash": "0xcbf3fe9f4091389d80d2a7b4a230acf5c82891f230d7934f35d96a1a319952e7,0xdbedabbf1db889eb9c6ee1d61ee6ea4849bb8ec4b14c698b191a85cf54d86b04,0xd39d78ba0c6aa330be181d880852cc4410db57aea688b7afe731a852258a04cd,0x431d8f4bae8bdcac40ceb66f2d81e85ad26cb72a386b6721d6f1282705740b91,0x7041b4b36d40e7df33aa5a140bdf76c3404ae07f88ad18bebd65a0eb1d61e9d1"
+  },
+  {
+    "at": 1788794834907,
+    "totalUsd": 377.414992,
+    "holders": 804,
+    "realizedCumUsd": 110211.89876358901,
+    "txHash": "0x6802ba3964c6b52bda7d4328e8577a796a2695942b799adfecff8e29c7e29364,0x46b9519697391d7ab24fe3809ab4006cb58e9830a70e175e0946f6b2c64a73df,0xcb846e52ad27864bd291df5900490ce73ec9f42783984e395aba7bd9b841017d,0x90a1253e50a391ba3564d5b873e26a4417cad5cf98f4ebffd68fac2ddae73f58,0x8f8e807ea8648e685bc670900d384f3dd8aa76562f6e9ed3da85e7de5c093728"
+  },
+  {
+    "at": 1788795803111,
+    "totalUsd": 444.096505,
+    "holders": 845,
+    "realizedCumUsd": 110803.79802348975,
+    "txHash": "0xc8709069269e936748a85041d7975ca1367f17bfcc510e51db8bf5306740f5e7,0x7159ca6c3b3fc12f859ee71fa117507c37f48f75f794a2021ecdbd05ae177fc7,0x3e957b7261e47df330fc140a48e04d467d3aae373dd85ad3d9ecf8a3db84021c,0x901749f99857fb0d578efacc0c261d4586d4022505490ee2ef000d3e73e708f2,0x2ae649a9117525c59dc284516707a2fb14068d83a11c27697e48e4622000d374"
+  },
+  {
+    "at": 1788796763445,
+    "totalUsd": 768.339509,
+    "holders": 933,
+    "realizedCumUsd": 111954.9035386394,
+    "txHash": "0xb6469366b7f2309fe7909306f7f125f2f9215097ee5169f8afc8069a3bbb70c9,0x9e67abb842f7bd28e519adb06583fe5702f34f4d9606e0286933f32a1eb40412,0xf5200d025799e96823441b1987325d105e1cc2a07bbf9376b69929ba6dcf51f5,0x38d84ce850d53a6ae213094e8cebbb4215f20d97b95078d65567f8fcdba72146,0xae287d58211291dad7de58d82d9184f438555d98bf99af3389b50ac177d6dd5f"
+  },
+  {
+    "at": 1788797722596,
+    "totalUsd": 446.241218,
+    "holders": 833,
+    "realizedCumUsd": 112423.25793367648,
+    "txHash": "0xd12f6ed38cb059d54abf7f0215914dbbe5ec03f1595081a2698c083bd50df5f9,0xcf5b5a185ed89a2cb46fc9c262a202271ba30dbbca4dbb7543dbdd9b9d022031,0x7f5d4c602e16570dbef7979592c822dd8cbfe616c6b2a3f8cb50b66d0e8886af,0x08c1a349709f9965930d88aea8b9d467c305ec867907713822e25a8e88475bd9,0xb875ed0b2561641eddf9b91f2bf4c0ee47a1f272f45f9a904485960406a51aef"
+  },
+  {
+    "at": 1788798681691,
+    "totalUsd": 351.404634,
+    "holders": 771,
+    "realizedCumUsd": 112891.94690976731,
+    "txHash": "0xe3c76765a99a9a04dd71055fd1438e4d82b36bf321d49a7bbe73fa5182eb122c,0x22203317200c79a45f4738e471df0f8d47b3e54e51c0ea1da9a9b9c316f384af,0xbe3700fa3b00182d3329dd5769c7ab00ec562151887c263b90132cce46b1a11d,0x1e79f1fec43060f1b3bdaf5532a62e971d34df8800171da70e3acb0c80210bcb"
+  },
+  {
+    "at": 1788799643408,
+    "totalUsd": 300.796755,
+    "holders": 739,
+    "realizedCumUsd": 113293.05739776733,
+    "txHash": "0xa75b688901ef1e9a1a1319b13c767bcb4203b0ac23672155dd0902a82a2dd697,0xad1dca5d64a69696370c9f33b86e24ca4b033ae11713ac1048933951388db19c,0x93f325b0a298b43e41541f6b5ff88ef93cc30986da3ae16a80ae8cd8b5b659e5,0x52a65fa6327c5cac8801e9629cf8b4894e429f5df34fd50bb1a946f578a1a813"
+  },
+  {
+    "at": 1788800783483,
+    "totalUsd": 353.295634,
+    "holders": 779,
+    "realizedCumUsd": 113764.08691274229,
+    "txHash": "0x39a512d3765168031be58973353f1aa54404edb4725361c14ea0d9e5a88f5ff8,0x3541cbd33c83af9f1c29128774918e90bfdb37925f02e819df6b6bd8a51a4db4,0x4aaf6c098f5789041984cce14d6d051a30e04b927d67605d82c5542ed5853740,0xac6c69b3b08fb15517bae09fab6e127f5f68a82e382c95ab0f084a31b59b774e"
+  },
+  {
+    "at": 1788801745634,
+    "totalUsd": 329.394236,
+    "holders": 765,
+    "realizedCumUsd": 114203.28435472584,
+    "txHash": "0x182359d981bb0a1ba95c7658de538e376134ea921ad9f46577f12a3f1a3ba983,0xc9adaa515cae625829681dee4b5b6c83565df9a228d5ce73a3d7d9575fc8d955,0x38e853382a1a0867b766942de445d1fabe89b4e97786f95323b95bb9a337a4ff,0x542b0c8a7b0f6e094d3cb5e1276602e91dc1fb262d8fdee507c9d3cc837f1707"
+  },
+  {
+    "at": 1788804391687,
+    "totalUsd": 376.235837,
+    "holders": 787,
+    "realizedCumUsd": 114704.93862028646,
+    "txHash": "0xbf6637af9c991bc33e2fd012bf0c8ce2d965ff78ea8c8f7e71cd22b988043ae7,0x603de4ef565b5b8f96fef8e6490b486319e1236667f9795cd63b5fe0af249065,0x5c52f27aa3ea540f8c00b0650421bf0990d1cb7b5a29aa1169f38dd917eede6e,0x8b44dddc5dbefd48730463708b59debfbd3f73bafc33cd5c9f968dd402accc31"
+  },
+  {
+    "at": 1788805980850,
+    "totalUsd": 307.322683,
+    "holders": 745,
+    "realizedCumUsd": 115114.73472361562,
+    "txHash": "0x3723ea5ed471d7a4230552d35a7d1fc909714b5693b934e75953395a9fcc83cf,0x8f847fbcd778fb491bf8130a7ba9c23f6107d77160caf5826f00c33856daa3b5,0x98edf716a528b484abcf7fb0f57e665a2a7527c604852be1e5c5f3a481fe7e71,0xc3321739ee422c785541c26037206d10a1b3557eef85742268acbe3678527c10"
+  },
+  {
+    "at": 1788806941989,
+    "totalUsd": 299.136405,
+    "holders": 741,
+    "realizedCumUsd": 115513.56268400312,
+    "txHash": "0x62d909cdece4ba666c46affa787db1a4283af4e19697ebbe49a723f896a5f417,0xe19f10c9a2ec5307bed2ceab70b58912e8f9932f6b5ad28eca61da60e32eacd9,0x4d7df613dbd222087370dba1c24509134340326497d86f33770fc18ababac1d7,0xf143b7dff79ade38dd8482150ff6cbfe4c70a0a2c81f04ab084c15de323fb060"
+  },
+  {
+    "at": 1788807912244,
+    "totalUsd": 604.177908,
+    "holders": 890,
+    "realizedCumUsd": 116318.89418508581,
+    "txHash": "0x2f582e4f5d8a1e207ea7a2f53100ac7954cc3f636a57dcd4329df18560f65152,0x9a04cb11155d104c703618122467e97c3db9e199cfdf958516cfbe8d7079be49,0xa2c09d0782ed6faadcb46e36d48717fa03cf18366da54a0960f86066710dda6c,0xb9920996b716664687129e7aa26f72870991f6ba60614db16a50e7e2849a815a,0x69fbecaf56ac802e7baab73cc87b4c35fd1904cd3fd392a5397c5be8b0510513"
+  },
+  {
+    "at": 1788808870219,
+    "totalUsd": 498.896506,
+    "holders": 856,
+    "realizedCumUsd": 116984.08479977591,
+    "txHash": "0x43a4a7a4b6e094670e9ba6461bcdec201a2106868641b02e34a8f7b3d4275371,0x3d07104f42ab41329028d022daa359d6a3b55476e303d38b8af4028a2ab60ae9,0x88b3c64882855824fb516fae972d994a805c431375dd2611d8b2474c4ce83b7e,0x8c6eda34d4d1599643d7b7ae1fdd12149c35af2e8d6e46c0e2edc145b8b2edd4,0x7b9a2c3f719786053e19ed2bc16303d257f5f47501cda81fd49140840026ddc0"
+  },
+  {
+    "at": 1788809834916,
+    "totalUsd": 477.820844,
+    "holders": 851,
+    "realizedCumUsd": 117621.24122064875,
+    "txHash": "0x11ff524b78f7695fe7f9297f3d31890d7918a6ee1ec122bb4192a9498a316e81,0x72548676e8874013e618b029d7da89f69b515bee17b40f2d5ab119730427b04c,0x8dd7ddf699bd31d4d811fa873075298b3732634aef17154cdd13837fbae8ba38,0xfdee3fac605d58c73a4a0de26d8a421565891a613c46d0dac2cb7c1f15e1693e,0x99c4de8c08dd401e260e7407a53c4d54b6bd9a48e08da1cbe79b2d507b008acf"
   }
 ]
 ```
 
 ## Appendix E — Methodology notes
 
-- Chain reads via `https://rpc.mainnet.chain.robinhood.com`
-- Function selectors resolved through OpenChain / 4byte signature DBs and runtime bytecode scan of `vault.runtime.hex`
-- State pinned to block `55498712` / `0x905feebb6faf85315a8f2697e121f538dcc28d4e58fd8e102d59dc3c4df65823` / `2026-09-05T23:03:40Z`
-- USDG amounts use **6 decimals**; AA uses **18**
-- API `distributedUsd` can differ slightly from the sum of listed rounds — treat both as approximate desk accounting and prefer onchain sums for forensic work
-- This Markdown file is **self-contained**: status, meta, full distribution history, pin, and surface ledger are embedded rather than shipped as companion JSON files
+- Chain reads via private Robinhood RPC (`ROBINHOOD_RPC_URL`; URL not published)
+- Selectors confirmed in vault bytecode at pin
+- State pinned to block `57099428` / `0x80e6ce7ba61459ef97604844b2c75a7123a183531275b0bb53fa1d5b2366f15c` / `2026-09-07T19:54:31Z`
+- USDG **6** decimals; AA **18**
 - No real keys used; no transactions signed or broadcast
 
 ## Appendix F — Target integrity manifest (embedded)
@@ -1993,9 +2337,9 @@ All **164** payout rounds from `GET https://www.arbitrageape.app/api/distributio
   "pins": [
     {
       "label": "state_head",
-      "block_number": 55498712,
-      "block_hash": "0x905feebb6faf85315a8f2697e121f538dcc28d4e58fd8e102d59dc3c4df65823",
-      "utc": "2026-09-05T23:03:40Z"
+      "block_number": 57099428,
+      "block_hash": "0x80e6ce7ba61459ef97604844b2c75a7123a183531275b0bb53fa1d5b2366f15c",
+      "utc": "2026-09-07T19:54:31Z"
     }
   ],
   "runtime": {
@@ -2038,7 +2382,7 @@ All **164** payout rounds from `GET https://www.arbitrageape.app/api/distributio
       "runtime_status": "eoa"
     }
   ],
-  "report_source_id": "arbitrage-ape-dd-v3-merged",
+  "report_source_id": "arbitrage-ape-dd-v4-refresh",
   "no_real_signing": true,
   "no_broadcast": true
 }
